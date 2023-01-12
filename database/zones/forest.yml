@@ -1,6 +1,15 @@
 name: forest
 description: A forest full of wolf
 channel_id: 1016772850402721842
-entitys: []
+entitys:
+  1:
+    name: 🐀 Giant Rat
+    max_hp: 2
+    attack: 1
+    defense: 1
+    xp: 1
+    gold: 1
+    enemy: giantrat
+    min_level: 1
 type: PVE_ZONE
 zone: forest1
