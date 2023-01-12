@@ -1,0 +1,31 @@
+characters:
+  276384853526839296:
+    attack: 3
+    battling: null
+    defense: 1
+    gold: 15
+    hp: 16
+    inventory: []
+    level: 2
+    mana: 0
+    max_hp: 16
+    mode:
+    - ADVENTURE
+    name: grdkflv
+    user_id: 276384853526839296
+    xp: 14
+  365714383793422338:
+    attack: 3
+    battling: null
+    defense: 1
+    gold: 4
+    hp: 21
+    inventory: []
+    level: 2
+    mana: 0
+    max_hp: 21
+    mode:
+    - ADVENTURE
+    name: Aiden
+    user_id: 365714383793422338
+    xp: 20

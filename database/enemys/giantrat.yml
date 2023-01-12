@@ -1,0 +1,8 @@
+name: 🐀 Giant Rat
+max_hp: 2
+attack: 1
+defense: 1
+xp: 1
+gold: 1
+enemy: giantrat
+min_level: 1
