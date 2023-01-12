@@ -5,6 +5,7 @@ from api.gamemode import GameMode
 from api.enemy import Enemy
 from api.actor import Actor
 from api.helper_function import *
+from api.zone import *
 
 class Character(Actor):
 
