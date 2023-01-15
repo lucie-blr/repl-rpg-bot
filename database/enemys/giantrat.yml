@@ -6,3 +6,4 @@ xp: 1
 gold: 1
 enemy: giantrat
 min_level: 1
+last_death: 0

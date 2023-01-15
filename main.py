@@ -6,7 +6,7 @@ from discord.commands import SlashCommandGroup, Option
 from api.actor import *
 from api.character import *
 from api.enemy import *
-
+from api.zone import *
 
 import yaml
 
@@ -103,6 +103,7 @@ async def status(ctx):
 **MANA:**  {character.mana}
 **LEVEL:** {character.level}
 **XP:**    {character.xp}/{character.xp+xp_needed}
+**AREA:** {character.zone_id}
     """, inline=True)
 
     # Inventory field
@@ -118,12 +119,37 @@ async def status(ctx):
 async def hunt(ctx):
     character = load_character(ctx.author.id)
 
+    print('t')
+
     if character.mode != GameMode.ADVENTURE:
         await ctx.respond("Can only call this command outside of battle!")
         return
 
-    enemy = character.hunt()
+    print('tt')
+
+    enemy_id = character.hunt()
+
+    print('trr')
+
+    area = Zone(character.zone_id)
+
+    print('te')
+
+    if enemy_id == None:
+        return
     
+    print('td')
+
+    if not enemy_id in area.battling.keys():
+        await ctx.respond(f"{enemy_id} is not in the zone!")
+        return
+
+    print('tf')
+
+    enemy = Enemy(area.battling.get(enemy_id)["enemy"])
+    
+    print('tdsq')
+
     # Send reply
     await ctx.respond(f"You encounter a {enemy.name}. Do you `!fight` or `!flee`?")
 

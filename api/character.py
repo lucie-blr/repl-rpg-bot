@@ -1,7 +1,7 @@
-import enum, random, sys, yaml, os
+import enum, random, sys, yaml, os, time
 from copy import deepcopy
 
-from api.gamemode import GameMode
+from api.gamemode import *
 from api.enemy import Enemy
 from api.actor import Actor
 from api.helper_function import *
@@ -11,7 +11,7 @@ class Character(Actor):
 
     level_cap = 10
 
-    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, gold, inventory, mode, battling, user_id):
+    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, gold, inventory, mode, battling, user_id, zone_id):
         super().__init__(name, hp, max_hp, attack, defense, xp, gold)
         self.mana = mana
         self.level = level
@@ -19,20 +19,19 @@ class Character(Actor):
         self.inventory = inventory 
 
         self.mode = GameMode[mode[0]]
-        if battling != None:
-            enemy_class = battling.get("enemy")
-            self.battling = Enemy(enemy_class)
-            self.battling.rehydrate(**battling)
-        else:
-            self.battling = None
+
+        self.battling = battling
+
         self.user_id = user_id
+
+        self.zone_id = zone_id
 
     def save_to_db(self):
         db = yaml.safe_load(open('./game.yml'))
 
         character_dict = deepcopy(vars(self))
         if self.battling != None:
-            character_dict["battling"] = deepcopy(vars(self.battling))
+            character_dict["battling"] = self.battling
         character_dict['mode'] = [self.mode.name]
 
         db["characters"][self.user_id] = character_dict
@@ -42,27 +41,35 @@ class Character(Actor):
 
     def hunt(self):
         # Generate random enemy to fight
-        while True:
-            enemy_types = []
+        enemys = []
 
-            for filename in os.listdir('./database/enemys'):
-                enemy_types.append(filename[:-4])
+        zone = Zone(self.zone_id)
 
-            enemy_type = random.choice(enemy_types)
+        entitys = zone.entitys
 
-            enemy_type = Enemy(enemy_type)
-    
-            if enemy_type.min_level <= self.level:
-                break
+        if zone.type == ZoneType.PVE_ZONE:
+            for entity in zone.entitys.keys():
 
-        enemy = enemy_type
+                entity_dict = zone.entitys.get(entity)
+
+                if time.time() - entity_dict["last_death"] >= entity_dict["respawn"]:
+
+                    enemys.append(entity)
+
+        enemy = random.choice(enemys)
 
         # Enter battle mode
         self.mode = GameMode.BATTLE
         self.battling = enemy
 
+        enemy_dict = zone.entitys.get(enemy)
+
+        zone.entitys.pop(enemy, None)
+        zone.battling[enemy] = enemy_dict
+
         # Save changes to DB after state change
         self.save_to_db()
+        zone.save_to_db()
 
         return enemy
 

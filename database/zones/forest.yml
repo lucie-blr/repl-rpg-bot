@@ -1,15 +1,29 @@
-name: forest
-description: A forest full of wolf
-channel_id: 1016772850402721842
-entitys:
+battling:
   1:
-    name: 🐀 Giant Rat
-    max_hp: 2
     attack: 1
     defense: 1
-    xp: 1
-    gold: 1
     enemy: giantrat
+    gold: 1
+    last_death: 0
+    max_hp: 2
     min_level: 1
+    name: "\U0001F400 Giant Rat"
+    respawn: 5000
+    xp: 1
+channel_id: 1016772850402721842
+description: A forest full of wolf
+entitys:
+  2:
+    attack: 1
+    defense: 1
+    enemy: giantrat
+    gold: 1
+    last_death: 0
+    max_hp: 2
+    min_level: 1
+    name: "\U0001F400 Giant Rat"
+    respawn: 5000
+    xp: 1
+name: forest
 type: PVE_ZONE
-zone: forest1
+zone: forest
