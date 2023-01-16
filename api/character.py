@@ -5,13 +5,13 @@ from api.gamemode import *
 from api.enemy import Enemy
 from api.actor import Actor
 from api.helper_function import *
-from api.zone import *
+from api.area import *
 
 class Character(Actor):
 
     level_cap = 10
 
-    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, gold, inventory, mode, battling, user_id, zone_id,skin):
+    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, gold, inventory, mode, battling, user_id, area_id,skin):
         super().__init__(name, hp, max_hp, attack, defense, xp, gold)
         self.mana = mana
         self.level = level
@@ -24,7 +24,7 @@ class Character(Actor):
 
         self.user_id = user_id
 
-        self.zone_id = zone_id
+        self.area_id = area_id
 
         self.skin = skin
 
@@ -45,14 +45,14 @@ class Character(Actor):
         # Generate random enemy to fight
         enemys = []
 
-        zone = Zone(self.zone_id)
+        area = Area(self.area_id)
 
-        entitys = zone.entitys
+        entitys = area.entitys
 
-        if zone.type == ZoneType.PVE_ZONE:
-            for entity in zone.entitys.keys():
+        if area.type == AreaType.PVE_AREA:
+            for entity in area.entitys.keys():
 
-                entity_dict = zone.entitys.get(entity)
+                entity_dict = area.entitys.get(entity)
 
                 print(time.time() - entity_dict["last_death"])
                 print(entity_dict["respawn"])
@@ -70,19 +70,19 @@ class Character(Actor):
         self.mode = GameMode.BATTLE
         self.battling = enemy
 
-        enemy_dict = zone.entitys.get(enemy)
+        enemy_dict = area.entitys.get(enemy)
 
-        zone.entitys.pop(enemy, None)
-        zone.battling[enemy] = enemy_dict
+        area.entitys.pop(enemy, None)
+        area.battling[enemy] = enemy_dict
 
         # Save changes to DB after state change
         self.save_to_db()
-        zone.save_to_db()
+        area.save_to_db()
 
         return enemy
 
     def fight(self, enemy):
-        area = Zone(self.zone_id)
+        area = Area(self.area_id)
 
         enemy_dict = area.battling.get(self.battling)
 

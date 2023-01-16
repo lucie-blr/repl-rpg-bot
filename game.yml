@@ -1,9 +1,10 @@
 characters:
   276384853526839296:
+    area_id: forest
     attack: 3
     battling: null
     defense: 1
-    gold: 31
+    gold: 36
     hp: 16
     inventory: []
     level: 2
@@ -12,11 +13,11 @@ characters:
     mode:
     - ADVENTURE
     name: grdkflv
-    user_id: 276384853526839296
-    xp: 30
-    zone_id: forest
     skin: https://media.discordapp.net/attachments/919160541291888703/1064491201048367165/IMG_2689.jpg
+    user_id: 276384853526839296
+    xp: 35
   365714383793422338:
+    area_id: forest
     attack: 4
     battling: null
     defense: 1
@@ -29,7 +30,6 @@ characters:
     mode:
     - ADVENTURE
     name: Aiden
+    skin: https://media.discordapp.net/attachments/919160541291888703/1064493022978510928/IMG_2228.JPG?width=472&height=629
     user_id: 365714383793422338
     xp: 58
-    zone_id: forest
-    skin: https://media.discordapp.net/attachments/919160541291888703/1064493022978510928/IMG_2228.JPG?width=472&height=629

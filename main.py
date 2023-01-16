@@ -6,7 +6,7 @@ from discord.commands import SlashCommandGroup, Option
 from api.actor import *
 from api.character import *
 from api.enemy import *
-from api.zone import *
+from api.area import *
 
 import yaml
 
@@ -105,7 +105,7 @@ async def status(ctx):
 **MANA:**  {character.mana}
 **LEVEL:** {character.level}
 **XP:**    {character.xp}/{character.xp+xp_needed}
-**AREA:** {character.zone_id}
+**AREA:** {character.area_id}
     """, inline=True)
 
     # Inventory field
@@ -134,14 +134,14 @@ async def hunt(ctx):
 
     enemy_id = character.hunt()
 
-    area = Zone(character.zone_id)
+    area = Area(character.area_id)
 
     if enemy_id == None:
         await ctx.respond("No enemy found in the area.")
         return
     
     if not enemy_id in area.battling.keys():
-        await ctx.respond(f"{enemy_id} is not in the zone!")
+        await ctx.respond(f"{enemy_id} is not in the area!")
         return
 
     enemy = Enemy(**(area.battling.get(enemy_id)))
@@ -163,7 +163,7 @@ async def fight(ctx):
         
     # Simulate battle
     enemy_id = character.battling
-    area = Zone(character.zone_id)
+    area = Area(character.area_id)
     enemy_dict = area.battling.get(enemy_id)
     enemy = Enemy(**enemy_dict)
 
@@ -216,7 +216,11 @@ async def flee(ctx):
         await ctx.respond("Can only call this command in battle!")
         return
 
-    enemy = character.battling
+
+    enemy_id = character.battling
+    area = Area(character.area_id)
+    enemy_dict = area.battling.get(enemy_id)
+    enemy = Enemy(**enemy_dict)
     damage, killed = character.flee(enemy)
 
     if killed:

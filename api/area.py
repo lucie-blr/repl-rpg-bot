@@ -1,22 +1,22 @@
 import discord.channel
-from api.gamemode import ZoneType
+from api.gamemode import AreaType
 import yaml, time
 from copy import deepcopy
 
-class Zone:
+class Area:
     def __init__(self, channel):
-        db = yaml.safe_load(open(f"./database/zones/{channel}.yml"))
+        db = yaml.safe_load(open(f"./database/areas/{channel}.yml"))
 
         self.name = db.get("name")
         self.description = db.get("description")
         self.channel_id = db.get("channel_id")
         self.entitys = db.get("entitys")
         self.battling = db.get("battling")
-        self.type = ZoneType[db.get("type")]
-        self.zone = channel
+        self.type = AreaType[db.get("type")]
+        self.area = channel
 
     def save_to_db(self):
-        db = yaml.safe_load(open(f'./database/zones/{self.zone}.yml'))
+        db = yaml.safe_load(open(f'./database/areas/{self.area}.yml'))
 
         area_dict = deepcopy(vars(self))
 
@@ -24,7 +24,7 @@ class Zone:
 
         db = area_dict
 
-        with open(f"./database/zones/{self.zone}.yml", "w") as f:
+        with open(f"./database/areas/{self.area}.yml", "w") as f:
             yaml.dump(db, f)
 
     def save_enemy(self, enemy, id):
