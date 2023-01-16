@@ -1,0 +1,10 @@
+name: 🐺 Lone wolf
+max_hp: 10
+hp: 10
+attack: 2
+defense: 1
+xp: 3
+gold: 3
+enemy: lone_wolf
+min_level: 2
+last_death: 0

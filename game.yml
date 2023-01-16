@@ -3,7 +3,7 @@ characters:
     attack: 3
     battling: null
     defense: 1
-    gold: 27
+    gold: 31
     hp: 13
     inventory: []
     level: 2
@@ -13,13 +13,13 @@ characters:
     - ADVENTURE
     name: grdkflv
     user_id: 276384853526839296
-    xp: 26
+    xp: 30
     zone_id: forest
   365714383793422338:
     attack: 4
     battling: null
     defense: 1
-    gold: 32
+    gold: 36
     hp: 24
     inventory: []
     level: 3
@@ -29,5 +29,5 @@ characters:
     - ADVENTURE
     name: Aiden
     user_id: 365714383793422338
-    xp: 48
+    xp: 52
     zone_id: forest
