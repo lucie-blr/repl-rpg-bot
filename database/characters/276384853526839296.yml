@@ -1,19 +1,17 @@
 adb: 10
 area_id: forest
-attack:
-- 30
-- 90
+attack: 2
 battling: null
 defense: 1
-gold: 69
+gold: 0
 hp: 20
 inventory: []
-level: 3
+level: 1
 mana: 0
-max_hp: 24
+max_hp: 20
 mode:
 - ADVENTURE
-name: grdkflv
-skin: https://media.discordapp.net/attachments/919160541291888703/1064491201048367165/IMG_2689.jpg
+name: Void
+skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 276384853526839296
-xp: 29
+xp: 0

@@ -52,18 +52,19 @@ cmd = SlashCommandGroup("rpg", "Commands for server management!")
 @bot.slash_command(name="create", help="Create a character.")
 async def create(ctx, character_name=None):
     user_id = ctx.author.id
-    db = yaml.safe_load(open('./game.yml'))
 
     # if no name is specified, use the creator's nickname
     if character_name == None:
         character_name = ctx.author.name
 
     # create characters dictionary if it does not exist
-    if "characters" not in db.keys():
-        db["characters"] = {}
+    characters = []
+    for filename in os.listdir('./database/characters'):
+        if filename.endswith('.yml'):
+            characters.append(filename[:-4])
 
     # only create a new character if the user does not already have one
-    if user_id not in db["characters"] or not db["characters"][user_id]:
+    if user_id not in characters:
         character = Character(**{
             "name": character_name,
             "hp": 20,
@@ -78,7 +79,9 @@ async def create(ctx, character_name=None):
             "mode": ['ADVENTURE'],
             "battling": None,
             "user_id": user_id,
-            "skin": None
+            "area_id": "forest",
+            "adb": 10,
+            "skin": "https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png"
         })
         character.save_to_db()
         await ctx.respond(f"Nouveau personnage niveau 1 créé : {character_name}. Entrez `/status` pour voir vos stats.")

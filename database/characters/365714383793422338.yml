@@ -1,10 +1,12 @@
-area_id: forest
-attack: [30, 90]
 adb: 10
+area_id: forest
+attack:
+- 30
+- 90
 battling: null
 defense: 1
-gold: 530
-hp: 450
+gold: 533
+hp: 442
 inventory: []
 level: 6
 mana: 0
@@ -14,4 +16,4 @@ mode:
 name: Jean-Marie Bigard
 skin: https://media.discordapp.net/attachments/619262155685888000/1064614049670778970/image.png
 user_id: 365714383793422338
-xp: 147
+xp: 150

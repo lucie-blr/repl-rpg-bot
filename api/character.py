@@ -30,7 +30,6 @@ class Character(Actor):
         self.skin = skin
 
     def save_to_db(self):
-        db = yaml.safe_load(open(f'./database/characters/{self.user_id}.yml'))
 
         character_dict = deepcopy(vars(self))
         if self.battling != None:
@@ -38,8 +37,13 @@ class Character(Actor):
         character_dict['mode'] = [self.mode.name]
 
         db = character_dict
-
-        with open(f'./database/characters/{self.user_id}.yml', "w") as f:
+        try:
+            with open(f'./database/characters/{self.user_id}.yml', "w") as f:
+                yaml.dump(db, f)
+        except:
+            f = open(f'./database/characters/{self.user_id}.yml', 'x')
+            f.close()
+            with open(f'./database/characters/{self.user_id}.yml', "w") as f:
                 yaml.dump(db, f)
 
     def hunt(self):
