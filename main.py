@@ -12,9 +12,7 @@ import yaml
 
 # Helper functions
 def load_character(user_id):
-    db = yaml.safe_load(open('./game.yml'))
-
-    character_dict = db.get("characters").get(user_id)
+    character_dict = yaml.safe_load(open(f'./database/characters/{user_id}.yml'))
 
     return Character(**character_dict)
 

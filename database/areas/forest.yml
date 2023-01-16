@@ -1,5 +1,29 @@
 area: forest
-battling: {}
+battling:
+  4:
+    attack: 2
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
+  5:
+    attack: 2
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
 channel_id: 1012501860113993809
 description: A forest full of wolf
 entitys:
@@ -21,37 +45,13 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1673894409.768778
+    last_death: 1673896957.248593
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
     respawn: 15
     xp: 3
   3:
-    attack: 2
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 10
-    last_death: 1673894409.768778
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  4:
-    attack: 2
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 10
-    last_death: 1673894409.768778
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  5:
     attack: 2
     defense: 1
     enemy: lone_wolf

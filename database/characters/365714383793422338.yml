@@ -1,0 +1,16 @@
+area_id: forest
+attack: 13
+battling: null
+defense: 1
+gold: 530
+hp: 450
+inventory: []
+level: 6
+mana: 0
+max_hp: 450
+mode:
+- ADVENTURE
+name: Jean-Marie Bigard
+skin: https://media.discordapp.net/attachments/619262155685888000/1064614049670778970/image.png
+user_id: 365714383793422338
+xp: 147
