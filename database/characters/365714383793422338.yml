@@ -1,5 +1,6 @@
 area_id: forest
-attack: 13
+attack: [30, 90]
+adb: 10
 battling: null
 defense: 1
 gold: 530

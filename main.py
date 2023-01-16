@@ -270,7 +270,7 @@ async def levelup(ctx,
     if increase == "hp" or increase == "hitpoints" or increase == "max_hp" or increase == "maxhp":
         increase = "max_hp"
     elif increase == "attack" or increase == "att":
-        increase = "attack"
+        increase = "adb"
     elif increase == "defense" or increase == "def" or increase == "defence":
         increase = "defense"
 

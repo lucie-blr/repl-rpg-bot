@@ -11,8 +11,9 @@ class Character(Actor):
 
     level_cap = 10
 
-    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, gold, inventory, mode, battling, user_id, area_id,skin):
-        super().__init__(name, hp, max_hp, attack, defense, xp, gold)
+    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, 
+    gold, inventory, mode, battling, user_id, area_id,skin, adb):
+        super().__init__(name, hp, max_hp, attack, defense, xp, gold, adb)
         self.mana = mana
         self.level = level
         
