@@ -6,7 +6,7 @@ from discord.commands import SlashCommandGroup, Option
 from api.actor import *
 from api.character import *
 from api.enemy import *
-
+from api.area import *
 
 import yaml
 
@@ -21,15 +21,17 @@ def load_character(user_id):
 MODE_COLOR = {
     GameMode.BATTLE: 0xDC143C,
     GameMode.ADVENTURE: 0x005EB8,
-    GameMode.DEAD: 0x663333,
+    GameMode.DEAD: 0x333333,
 }
 def status_embed(ctx, character):
 
     # Current mode
     if character.mode == GameMode.BATTLE:
-        mode_text = f"Currently battling a {character.battling.name}."
+        mode_text = f"Currently battling."
     elif character.mode == GameMode.ADVENTURE:
         mode_text = "Currently adventuring."
+    elif character.mode == GameMode.DEAD:
+        mode_text = "Currently dead."
 
     # Create embed with description as current mode
     embed = discord.Embed(title=f"{character.name} status", description=mode_text, color=MODE_COLOR[character.mode])
@@ -77,7 +79,8 @@ async def create(ctx, character_name=None):
             "inventory": [],
             "mode": ['ADVENTURE'],
             "battling": None,
-            "user_id": user_id
+            "user_id": user_id,
+            "skin": None
         })
         character.save_to_db()
         await ctx.respond(f"New level 1 character created: {character_name}. Enter `!status` to see your stats.")
@@ -87,7 +90,6 @@ async def create(ctx, character_name=None):
 
 @bot.slash_command(name="status", help="Get information about your character.")
 async def status(ctx):
-    print(type(ctx.channel))
 
     character = load_character(ctx.author.id)
 
@@ -103,6 +105,7 @@ async def status(ctx):
 **MANA:**  {character.mana}
 **LEVEL:** {character.level}
 **XP:**    {character.xp}/{character.xp+xp_needed}
+**AREA:** {character.area_id}
     """, inline=True)
 
     # Inventory field
@@ -112,17 +115,36 @@ async def status(ctx):
     
     embed.add_field(name="Inventory", value=inventory_text, inline=True)
 
+    if character.skin != None:
+        embed.set_thumbnail(url=character.skin)
+
     await ctx.respond(embed=embed) 
 
 @bot.slash_command(name="hunt", help="Look for an enemy to fight.")
 async def hunt(ctx):
     character = load_character(ctx.author.id)
 
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("You can't do anything when you're dead.")
+        return
+
     if character.mode != GameMode.ADVENTURE:
         await ctx.respond("Can only call this command outside of battle!")
         return
 
-    enemy = character.hunt()
+    enemy_id = character.hunt()
+
+    area = Area(character.area_id)
+
+    if enemy_id == None:
+        await ctx.respond("No enemy found in the area.")
+        return
+    
+    if not enemy_id in area.battling.keys():
+        await ctx.respond(f"{enemy_id} is not in the area!")
+        return
+
+    enemy = Enemy(**(area.battling.get(enemy_id)))
     
     # Send reply
     await ctx.respond(f"You encounter a {enemy.name}. Do you `!fight` or `!flee`?")
@@ -131,12 +153,19 @@ async def hunt(ctx):
 async def fight(ctx):
     character = load_character(ctx.author.id)
     
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("You can't do anything when you're dead.")
+        return
+
     if character.mode != GameMode.BATTLE:
         await ctx.respond("Can only call this command in battle!")
         return
         
     # Simulate battle
-    enemy = character.battling
+    enemy_id = character.battling
+    area = Area(character.area_id)
+    enemy_dict = area.battling.get(enemy_id)
+    enemy = Enemy(**enemy_dict)
 
     # Character attacks
     damage, killed = character.fight(enemy)
@@ -178,12 +207,20 @@ async def fight(ctx):
 @bot.slash_command(name="flee", help="Flee the current enemy.")
 async def flee(ctx):
     character = load_character(ctx.author.id)
+
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("You can't do anything when you're dead.")
+        return
     
     if character.mode != GameMode.BATTLE:
         await ctx.respond("Can only call this command in battle!")
         return
 
-    enemy = character.battling
+
+    enemy_id = character.battling
+    area = Area(character.area_id)
+    enemy_dict = area.battling.get(enemy_id)
+    enemy = Enemy(**enemy_dict)
     damage, killed = character.flee(enemy)
 
     if killed:
@@ -198,6 +235,10 @@ async def flee(ctx):
 async def levelup(ctx, 
     increase:Option(str, "increase", choices=['ATTACK', 'DEFENSE'], required=True)):
     character = load_character(ctx.author.id)
+
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("You can't do anything when you're dead.")
+        return
 
     if character.mode != GameMode.ADVENTURE:
         await ctx.respond("Can only call this command outside of battle!")

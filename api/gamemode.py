@@ -5,7 +5,7 @@ class GameMode(enum.IntEnum):
   BATTLE = 2
   DEAD = 3
 
-class ZoneType(enum.IntEnum):
+class AreaType(enum.IntEnum):
   RP = 1
   CITY = 2
-  PVE_ZONE = 3
+  PVE_AREA = 3

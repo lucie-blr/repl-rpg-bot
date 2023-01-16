@@ -5,19 +5,14 @@ from api.actor import Actor
 
 class Enemy(Actor):
 
-    def __init__(self, enemy): #name, max_hp, attack, defense, xp, gold
-        enemy_db = yaml.safe_load(open(f'./database/enemys/{enemy}.yml'))
+    def __init__(self, name, hp, max_hp, attack, defense, xp, gold, min_level, enemy, last_death, respawn): #name, max_hp, attack, defense, xp, gold
 
-        name = enemy_db.get('name')
-        max_hp = enemy_db.get('max_hp')
-        attack = enemy_db.get('attack')
-        defense = enemy_db.get('defense')
-        xp = enemy_db.get('xp')
-        gold = enemy_db.get('gold')
-        self.min_level = enemy_db.get('min_level')
+        self.min_level = min_level
+        self.enemy = enemy
+        self.last_death = last_death
+        self.respawn = respawn
 
-        super().__init__(name, max_hp, max_hp, attack, defense, xp, gold)
-        self.enemy = enemy_db.get("enemy")
+        super().__init__(name, hp, max_hp, attack, defense, xp, gold)
 
     def rehydrate(self, name, hp, max_hp, attack, defense, xp, gold, enemy, min_level):
         self.name = name
@@ -29,3 +24,5 @@ class Enemy(Actor):
         self.gold = gold
         self.min_level = min_level
         self.enemy = enemy
+        self.last_death = last_death
+        self.respawn = respawn
