@@ -1,19 +1,19 @@
 characters:
   276384853526839296:
     attack: 3
-    battling: 1
+    battling: null
     defense: 1
-    gold: 16
-    hp: 16
+    gold: 27
+    hp: 13
     inventory: []
     level: 2
     mana: 0
     max_hp: 16
     mode:
-    - BATTLE
+    - ADVENTURE
     name: grdkflv
     user_id: 276384853526839296
-    xp: 15
+    xp: 26
     zone_id: forest
   365714383793422338:
     attack: 4

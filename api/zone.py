@@ -1,6 +1,6 @@
 import discord.channel
 from api.gamemode import ZoneType
-import yaml
+import yaml, time
 from copy import deepcopy
 
 class Zone:
@@ -27,3 +27,17 @@ class Zone:
         with open(f"./database/zones/{self.zone}.yml", "w") as f:
             yaml.dump(db, f)
 
+    def save_enemy(self, enemy, id):
+        if enemy.hp <= 0:
+            self.battling.pop(id, None)
+
+            enemy.hp = enemy.max_hp
+
+            enemy.last_death = time.time()
+
+            self.entitys[id] = deepcopy(vars(enemy))
+
+
+        else:
+            self.battling[id] = deepcopy(vars(enemy))
+        

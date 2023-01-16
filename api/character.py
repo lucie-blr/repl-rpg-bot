@@ -52,9 +52,15 @@ class Character(Actor):
 
                 entity_dict = zone.entitys.get(entity)
 
+                print(time.time() - entity_dict["last_death"])
+                print(entity_dict["respawn"])
+
                 if time.time() - entity_dict["last_death"] >= entity_dict["respawn"]:
 
                     enemys.append(entity)
+
+        if len(enemys) <= 0:
+            return None
 
         enemy = random.choice(enemys)
 
@@ -74,12 +80,22 @@ class Character(Actor):
         return enemy
 
     def fight(self, enemy):
-        outcome = super().fight(enemy)
+        area = Zone(self.zone_id)
+
+        enemy_dict = area.battling.get(self.battling)
+
+        enemy = Enemy(**enemy_dict)
+
+        outcome, killed = super().fight(enemy)
         
         # Save changes to DB after state change
         self.save_to_db()
+
+        area.save_enemy(enemy, self.battling)
+
+        area.save_to_db()
         
-        return outcome
+        return outcome, killed
 
     def flee(self, enemy):
         if random.randint(0,1+self.defense): # flee unscathed

@@ -27,7 +27,7 @@ def status_embed(ctx, character):
 
     # Current mode
     if character.mode == GameMode.BATTLE:
-        mode_text = f"Currently battling a {character.battling.name}."
+        mode_text = f"Currently battling."
     elif character.mode == GameMode.ADVENTURE:
         mode_text = "Currently adventuring."
 
@@ -119,37 +119,24 @@ async def status(ctx):
 async def hunt(ctx):
     character = load_character(ctx.author.id)
 
-    print('t')
-
     if character.mode != GameMode.ADVENTURE:
         await ctx.respond("Can only call this command outside of battle!")
         return
 
-    print('tt')
-
     enemy_id = character.hunt()
-
-    print('trr')
 
     area = Zone(character.zone_id)
 
-    print('te')
-
     if enemy_id == None:
+        await ctx.respond("No enemy found in the area.")
         return
     
-    print('td')
-
     if not enemy_id in area.battling.keys():
         await ctx.respond(f"{enemy_id} is not in the zone!")
         return
 
-    print('tf')
-
-    enemy = Enemy(area.battling.get(enemy_id)["enemy"])
+    enemy = Enemy(**(area.battling.get(enemy_id)))
     
-    print('tdsq')
-
     # Send reply
     await ctx.respond(f"You encounter a {enemy.name}. Do you `!fight` or `!flee`?")
 
@@ -162,7 +149,10 @@ async def fight(ctx):
         return
         
     # Simulate battle
-    enemy = character.battling
+    enemy_id = character.battling
+    area = Zone(character.zone_id)
+    enemy_dict = area.battling.get(enemy_id)
+    enemy = Enemy(**enemy_dict)
 
     # Character attacks
     damage, killed = character.fight(enemy)
