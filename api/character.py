@@ -11,7 +11,7 @@ class Character(Actor):
 
     level_cap = 10
 
-    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, gold, inventory, mode, battling, user_id, zone_id):
+    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, gold, inventory, mode, battling, user_id, zone_id,skin):
         super().__init__(name, hp, max_hp, attack, defense, xp, gold)
         self.mana = mana
         self.level = level
@@ -25,6 +25,8 @@ class Character(Actor):
         self.user_id = user_id
 
         self.zone_id = zone_id
+
+        self.skin = skin
 
     def save_to_db(self):
         db = yaml.safe_load(open('./game.yml'))

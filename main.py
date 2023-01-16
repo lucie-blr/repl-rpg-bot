@@ -79,7 +79,8 @@ async def create(ctx, character_name=None):
             "inventory": [],
             "mode": ['ADVENTURE'],
             "battling": None,
-            "user_id": user_id
+            "user_id": user_id,
+            "skin": None
         })
         character.save_to_db()
         await ctx.respond(f"New level 1 character created: {character_name}. Enter `!status` to see your stats.")
@@ -113,6 +114,9 @@ async def status(ctx):
         inventory_text += "\n".join(character.inventory)
     
     embed.add_field(name="Inventory", value=inventory_text, inline=True)
+
+    if character.skin != None:
+        embed.set_thumbnail(url=character.skin)
 
     await ctx.respond(embed=embed) 
 

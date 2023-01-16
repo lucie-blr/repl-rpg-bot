@@ -20,7 +20,7 @@ entitys:
     enemy: giantrat
     gold: 1
     hp: 2
-    last_death: 1673863605.125892
+    last_death: 1673864126.818916
     max_hp: 2
     min_level: 1
     name: "\U0001F400 Giant Rat"
@@ -32,24 +32,24 @@ entitys:
     enemy: giantrat
     gold: 1
     hp: 2
-    last_death: 1673863598.0880601
+    last_death: 1673864456.4963644
     max_hp: 2
     min_level: 1
     name: "\U0001F400  Nirat"
     respawn: 15
     xp: 1
   4:
-    name: 🐺 Lone wolf
-    max_hp: 10
-    hp: 10
     attack: 2
     defense: 1
-    xp: 3
-    gold: 3
     enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673864147.6589787
+    max_hp: 10
     min_level: 2
-    last_death: 0
+    name: "\U0001F43A Lone wolf"
     respawn: 15
+    xp: 3
 name: forest
 type: PVE_ZONE
 zone: forest

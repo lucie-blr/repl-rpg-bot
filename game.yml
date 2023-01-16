@@ -4,7 +4,7 @@ characters:
     battling: null
     defense: 1
     gold: 31
-    hp: 13
+    hp: 16
     inventory: []
     level: 2
     mana: 0
@@ -15,12 +15,13 @@ characters:
     user_id: 276384853526839296
     xp: 30
     zone_id: forest
+    skin: https://media.discordapp.net/attachments/919160541291888703/1064491201048367165/IMG_2689.jpg
   365714383793422338:
     attack: 4
     battling: null
     defense: 1
-    gold: 36
-    hp: 24
+    gold: 42
+    hp: 1
     inventory: []
     level: 3
     mana: 0
@@ -29,5 +30,6 @@ characters:
     - ADVENTURE
     name: Aiden
     user_id: 365714383793422338
-    xp: 52
+    xp: 58
     zone_id: forest
+    skin: https://media.discordapp.net/attachments/919160541291888703/1064493022978510928/IMG_2228.JPG?width=472&height=629
