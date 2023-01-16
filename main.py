@@ -21,7 +21,7 @@ def load_character(user_id):
 MODE_COLOR = {
     GameMode.BATTLE: 0xDC143C,
     GameMode.ADVENTURE: 0x005EB8,
-    GameMode.DEAD: 0x663333,
+    GameMode.DEAD: 0x333333,
 }
 def status_embed(ctx, character):
 
@@ -30,6 +30,8 @@ def status_embed(ctx, character):
         mode_text = f"Currently battling."
     elif character.mode == GameMode.ADVENTURE:
         mode_text = "Currently adventuring."
+    elif character.mode == GameMode.DEAD:
+        mode_text = "Currently dead."
 
     # Create embed with description as current mode
     embed = discord.Embed(title=f"{character.name} status", description=mode_text, color=MODE_COLOR[character.mode])
@@ -87,7 +89,6 @@ async def create(ctx, character_name=None):
 
 @bot.slash_command(name="status", help="Get information about your character.")
 async def status(ctx):
-    print(type(ctx.channel))
 
     character = load_character(ctx.author.id)
 
@@ -119,6 +120,10 @@ async def status(ctx):
 async def hunt(ctx):
     character = load_character(ctx.author.id)
 
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("You can't do anything when you're dead.")
+        return
+
     if character.mode != GameMode.ADVENTURE:
         await ctx.respond("Can only call this command outside of battle!")
         return
@@ -144,6 +149,10 @@ async def hunt(ctx):
 async def fight(ctx):
     character = load_character(ctx.author.id)
     
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("You can't do anything when you're dead.")
+        return
+
     if character.mode != GameMode.BATTLE:
         await ctx.respond("Can only call this command in battle!")
         return
@@ -194,6 +203,10 @@ async def fight(ctx):
 @bot.slash_command(name="flee", help="Flee the current enemy.")
 async def flee(ctx):
     character = load_character(ctx.author.id)
+
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("You can't do anything when you're dead.")
+        return
     
     if character.mode != GameMode.BATTLE:
         await ctx.respond("Can only call this command in battle!")
@@ -214,6 +227,10 @@ async def flee(ctx):
 async def levelup(ctx, 
     increase:Option(str, "increase", choices=['ATTACK', 'DEFENSE'], required=True)):
     character = load_character(ctx.author.id)
+
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("You can't do anything when you're dead.")
+        return
 
     if character.mode != GameMode.ADVENTURE:
         await ctx.respond("Can only call this command outside of battle!")

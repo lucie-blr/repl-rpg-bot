@@ -153,3 +153,7 @@ class Character(Actor):
         self.save_to_db()
 
         return (True, self.level) # (leveled up, new level)
+
+    def die(self):
+        self.hp = 0
+        self.mode = GameMode.DEAD
