@@ -123,6 +123,11 @@ async def status(ctx):
 @bot.slash_command(name="hunt", help="Look for an enemy to fight.")
 async def hunt(ctx):
     character = load_character(ctx.author.id)
+    area = Area(character.area_id)
+
+    if ctx.channel.id != area.channel_id:
+        await ctx.respond("You can only call this command game channels!")
+        return
 
     if character.mode == GameMode.DEAD:
         await ctx.respond("You can't do anything when you're dead.")
@@ -134,7 +139,7 @@ async def hunt(ctx):
 
     enemy_id = character.hunt()
 
-    area = Area(character.area_id)
+    area.rehydrate()
 
     if enemy_id == None:
         await ctx.respond("No enemy found in the area.")
@@ -152,6 +157,11 @@ async def hunt(ctx):
 @bot.slash_command(name="fight", help="Fight the current enemy.")
 async def fight(ctx):
     character = load_character(ctx.author.id)
+    area = Area(character.area_id)
+
+    if ctx.channel.id != area.channel_id:
+        await ctx.respond("You can only call this command game channels!")
+        return
     
     if character.mode == GameMode.DEAD:
         await ctx.respond("You can't do anything when you're dead.")
@@ -163,7 +173,7 @@ async def fight(ctx):
         
     # Simulate battle
     enemy_id = character.battling
-    area = Area(character.area_id)
+    area.rehydrate()
     enemy_dict = area.battling.get(enemy_id)
     enemy = Enemy(**enemy_dict)
 
@@ -207,6 +217,11 @@ async def fight(ctx):
 @bot.slash_command(name="flee", help="Flee the current enemy.")
 async def flee(ctx):
     character = load_character(ctx.author.id)
+    area = Area(character.area_id)
+
+    if ctx.channel.id != area.channel_id:
+        await ctx.respond("You can only call this command game channels!")
+        return
 
     if character.mode == GameMode.DEAD:
         await ctx.respond("You can't do anything when you're dead.")
@@ -218,7 +233,7 @@ async def flee(ctx):
 
 
     enemy_id = character.battling
-    area = Area(character.area_id)
+    area.rehydrate()
     enemy_dict = area.battling.get(enemy_id)
     enemy = Enemy(**enemy_dict)
     damage, killed = character.flee(enemy)

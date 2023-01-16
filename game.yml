@@ -4,7 +4,7 @@ characters:
     attack: 3
     battling: null
     defense: 1
-    gold: 36
+    gold: 38
     hp: 16
     inventory: []
     level: 2
@@ -15,7 +15,7 @@ characters:
     name: grdkflv
     skin: https://media.discordapp.net/attachments/919160541291888703/1064491201048367165/IMG_2689.jpg
     user_id: 276384853526839296
-    xp: 35
+    xp: 37
   365714383793422338:
     area_id: forest
     attack: 4
