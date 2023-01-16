@@ -4,7 +4,7 @@ characters:
     attack: 3
     battling: null
     defense: 1
-    gold: 38
+    gold: 39
     hp: 16
     inventory: []
     level: 2
@@ -15,21 +15,21 @@ characters:
     name: grdkflv
     skin: https://media.discordapp.net/attachments/919160541291888703/1064491201048367165/IMG_2689.jpg
     user_id: 276384853526839296
-    xp: 37
+    xp: 38
   365714383793422338:
     area_id: forest
-    attack: 4
+    attack: 13
     battling: null
     defense: 1
-    gold: 42
-    hp: 1
+    gold: 530
+    hp: 450
     inventory: []
-    level: 3
+    level: 6
     mana: 0
-    max_hp: 24
+    max_hp: 450
     mode:
     - ADVENTURE
-    name: Aiden
-    skin: https://media.discordapp.net/attachments/919160541291888703/1064493022978510928/IMG_2228.JPG?width=472&height=629
+    name: Jean-Marie Bigard
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064614049670778970/image.png
     user_id: 365714383793422338
-    xp: 58
+    xp: 147

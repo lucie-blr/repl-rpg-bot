@@ -4,48 +4,120 @@ channel_id: 1012501860113993809
 description: A forest full of wolf
 entitys:
   1:
-    attack: 1
+    attack: 2
     defense: 1
-    enemy: giantrat
-    gold: 1
-    hp: 2
-    last_death: 1673879315.559688
-    max_hp: 2
-    min_level: 1
-    name: "\U0001F400 Giant Rat"
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
     respawn: 15
-    xp: 1
+    xp: 3
   2:
-    attack: 1
+    attack: 2
     defense: 1
-    enemy: giantrat
-    gold: 1
-    hp: 2
-    last_death: 1673879262.9561045
-    max_hp: 2
-    min_level: 1
-    name: "\U0001F400 Giant Rat"
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
     respawn: 15
-    xp: 1
+    xp: 3
   3:
-    attack: 1
+    attack: 2
     defense: 1
-    enemy: giantrat
-    gold: 1
-    hp: 2
-    last_death: 1673877887.0978541
-    max_hp: 2
-    min_level: 1
-    name: "\U0001F400  Nirat"
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
     respawn: 15
-    xp: 1
+    xp: 3
   4:
     attack: 2
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1673864147.6589787
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
+  5:
+    attack: 2
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
+  6:
+    attack: 2
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
+  7:
+    attack: 2
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
+  8:
+    attack: 2
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
+  9:
+    attack: 2
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
+  10:
+    attack: 2
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
