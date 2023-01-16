@@ -141,10 +141,12 @@ class Character(Actor):
         return (self.xp >= xp_needed, xp_needed-self.xp) #(ready, XP needed)
 
     def level_up(self, increase):
-        ready, _ = self.ready_to_level_up()
+        ready, xp_needed = self.ready_to_level_up()
         if not ready:
             return (False, self.level) # (not leveled up, current level)
             
+        self.xp -= (xp_needed + self.xp)
+
         self.level += 1 # increase level
         self.max_hp = 20+(self.level-1)**2 
         setattr(self, increase, getattr(self, increase)+1) # increase chosen stat

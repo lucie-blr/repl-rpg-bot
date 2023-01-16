@@ -27,11 +27,11 @@ def status_embed(ctx, character):
 
     # Current mode
     if character.mode == GameMode.BATTLE:
-        mode_text = f"Currently battling."
+        mode_text = f"Entrain de combattre /"
     elif character.mode == GameMode.ADVENTURE:
-        mode_text = "Currently adventuring."
+        mode_text = "En pleine exploration."
     elif character.mode == GameMode.DEAD:
-        mode_text = "Currently dead."
+        mode_text = "Actuellement mort."
 
     # Create embed with description as current mode
     embed = discord.Embed(title=f"{character.name} status", description=mode_text, color=MODE_COLOR[character.mode])
@@ -83,9 +83,9 @@ async def create(ctx, character_name=None):
             "skin": None
         })
         character.save_to_db()
-        await ctx.respond(f"New level 1 character created: {character_name}. Enter `!status` to see your stats.")
+        await ctx.respond(f"Nouveau personnage niveau 1 créé : {character_name}. Entrez `/status` pour voir vos stats.")
     else:
-        await ctx.respond("You have already created your character.")
+        await ctx.respond("Vous avez déjà créé votre personnage.")
 
 
 @bot.slash_command(name="status", help="Get information about your character.")
@@ -123,74 +123,84 @@ async def status(ctx):
 @bot.slash_command(name="hunt", help="Look for an enemy to fight.")
 async def hunt(ctx):
     character = load_character(ctx.author.id)
+    area = Area(character.area_id)
+
+    if ctx.channel.id != area.channel_id:
+        await ctx.respond("Vous ne pouvez utiliser cette commande que quand des channels de jeu.")
+        return
 
     if character.mode == GameMode.DEAD:
-        await ctx.respond("You can't do anything when you're dead.")
+        await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
         return
 
     if character.mode != GameMode.ADVENTURE:
-        await ctx.respond("Can only call this command outside of battle!")
+        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat!")
         return
 
     enemy_id = character.hunt()
 
-    area = Area(character.area_id)
+    area.rehydrate()
 
     if enemy_id == None:
-        await ctx.respond("No enemy found in the area.")
+        await ctx.respond("Aucun ennemi trouvé dans la zone.")
         return
     
     if not enemy_id in area.battling.keys():
-        await ctx.respond(f"{enemy_id} is not in the area!")
+        await ctx.respond(f"{enemy_id} n'est pas dans la zone !")
         return
 
     enemy = Enemy(**(area.battling.get(enemy_id)))
     
     # Send reply
-    await ctx.respond(f"You encounter a {enemy.name}. Do you `!fight` or `!flee`?")
+    await ctx.respond(f"Vous rencontrez {enemy.name}. Est-ce que vous `/fight` ou `/flee`?")
 
 @bot.slash_command(name="fight", help="Fight the current enemy.")
 async def fight(ctx):
     character = load_character(ctx.author.id)
+    area = Area(character.area_id)
+
+    if ctx.channel.id != area.channel_id:
+        await ctx.respond("Vous ne pouvez utiliser cette commande que quand des channels de jeu.!")
+        return
     
     if character.mode == GameMode.DEAD:
-        await ctx.respond("You can't do anything when you're dead.")
+        await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
         return
 
     if character.mode != GameMode.BATTLE:
-        await ctx.respond("Can only call this command in battle!")
+        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat!")
         return
         
     # Simulate battle
     enemy_id = character.battling
-    area = Area(character.area_id)
+    area.rehydrate()
     enemy_dict = area.battling.get(enemy_id)
     enemy = Enemy(**enemy_dict)
 
     # Character attacks
     damage, killed = character.fight(enemy)
     if damage:
-        await ctx.respond(f"{character.name} attacks {enemy.name}, dealing {damage} damage!")
+        await ctx.respond(f"{character.name} attaque {enemy.name}, et fait {damage} dégâts !")
     else:
-        await ctx.respond(f"{character.name} swings at {enemy.name}, but misses!")
+        await ctx.respond(f"{character.name} essaye d'attaquer {enemy.name}, mais râte !")
 
         # End battle in victory if enemy killed
     if killed:
         xp, gold, ready_to_level_up = character.defeat(enemy)
         
-        await ctx.respond(f"{character.name} vanquished the {enemy.name}, earning {xp} XP and {gold} GOLD. HP: {character.hp}/{character.max_hp}.")
+        await ctx.respond(f"{character.name} a vaincu le {enemy.name}, et gagne {xp} XP et {gold} GOLD. HP: {character.hp}/{character.max_hp}.")
         
         if ready_to_level_up:
-            await ctx.respond(f"{character.name} has earned enough XP to advance to level {character.level+1}. Enter `!levelup` with the stat (HP, ATTACK, DEFENSE) you would like to increase. e.g. `!levelup hp` or `!levelup attack`.")
+            await ctx.respond(f"{character.name} a gagné assez d'XP pour monter au niveau {character.level+1}. Entrez `/levelup` avec la stat (ATTACK, DEFENSE) que vous voudriez amméliorer. e.g. `/levelup defense` ou `/levelup attack`.")
             
         return
     
         # Enemy attacks
     damage, killed = enemy.fight(character)
     if damage:
-        await ctx.respond(f"{enemy.name} attacks {character.name}, dealing {damage} damage!")
+        await ctx.respond(f"{enemy.name} attaque {character.name}, et fait {damage} dégâts!")
     else:
-        await ctx.respond(f"{enemy.name} tries to attack {character.name}, but misses!")
+        await ctx.respond(f"{enemy.name} essaie d'attaquer {character.name}, mais râte!")
 
     character.save_to_db() #enemy.fight() does not save automatically
 
@@ -198,38 +208,43 @@ async def fight(ctx):
     if killed:
         character.die()
         
-        await ctx.respond(f"{character.name} was defeated by a {enemy.name} and is no more. Rest in peace, brave adventurer.")
+        await ctx.respond(f"{character.name} a été battu par {enemy.name} et n'est plus. Rest in peace, brave aventurier.")
         return
 
         # No deaths, battle continues
-    await ctx.respond(f"The battle rages on! Do you `!fight` or `!flee`?")
+    await ctx.respond(f"La bataille fait rage ! Est-ce que vous `/fight` ou `/flee`?")
 
 @bot.slash_command(name="flee", help="Flee the current enemy.")
 async def flee(ctx):
     character = load_character(ctx.author.id)
+    area = Area(character.area_id)
+
+    if ctx.channel.id != area.channel_id:
+        await ctx.respond("Vous ne pouvez utiliser cette commande que quand des channels de jeu.!")
+        return
 
     if character.mode == GameMode.DEAD:
-        await ctx.respond("You can't do anything when you're dead.")
+        await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
         return
     
     if character.mode != GameMode.BATTLE:
-        await ctx.respond("Can only call this command in battle!")
+        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat!")
         return
 
 
     enemy_id = character.battling
-    area = Area(character.area_id)
+    area.rehydrate()
     enemy_dict = area.battling.get(enemy_id)
     enemy = Enemy(**enemy_dict)
     damage, killed = character.flee(enemy)
 
     if killed:
         character.die()
-        await ctx.respond(f"{character.name} was killed fleeing the {enemy.name}, and is no more. Rest in peace, brave adventurer.")
+        await ctx.respond(f"{character.name} est mort en essayant de fuir {enemy.name}, et n'est plus. Rest in peace, brave aventurier.")
     elif damage:
-        await ctx.respond(f"{character.name} flees the {enemy.name}, taking {damage} damage. HP: {character.hp}/{character.max_hp}")
+        await ctx.respond(f"{character.name} fuit {enemy.name}, et prend {damage} dégâts. HP: {character.hp}/{character.max_hp}")
     else:
-        await ctx.respond(f"{character.name} flees the {enemy.name} with their life but not their dignity intact. HP: {character.hp}/{character.max_hp}")
+        await ctx.respond(f"{character.name} fuit {enemy.name} Avec sa vie intact, mais pas sa dignité. HP: {character.hp}/{character.max_hp}")
 
 @bot.slash_command(name="levelup", help="Advance to the next level. Specify a stat to increase (HP, ATTACK, DEFENSE).")
 async def levelup(ctx, 
@@ -237,20 +252,20 @@ async def levelup(ctx,
     character = load_character(ctx.author.id)
 
     if character.mode == GameMode.DEAD:
-        await ctx.respond("You can't do anything when you're dead.")
+        await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
         return
 
     if character.mode != GameMode.ADVENTURE:
-        await ctx.respond("Can only call this command outside of battle!")
+        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat/")
         return
 
     ready, xp_needed = character.ready_to_level_up()
     if not ready:
-        await ctx.respond(f"You need another {xp_needed} to advance to level {character.level+1}")
+        await ctx.respond(f"Vous avez besoin de {xp_needed} pour monter au niveau {character.level+1}")
         return
         
     if not increase:
-        await ctx.respond("Please specify a stat to increase (HP, ATTACK, DEFENSE)")
+        await ctx.respond("Veuillez spécifier une statistique à améliorer. (ATTACK, DEFENSE)")
         return
 
     increase = increase.lower()
@@ -263,9 +278,9 @@ async def levelup(ctx,
 
     success, new_level = character.level_up(increase)
     if success:
-        await ctx.respond(f"{character.name} advanced to level {new_level}, gaining 1 {increase.upper().replace('_', ' ')}.")
+        await ctx.respond(f"{character.name} est monté au niveau {new_level}, gagnant 1 {increase.upper().replace('_', ' ')}.")
     else:
-        await ctx.respond(f"{character.name} failed to level up.")
+        await ctx.respond(f"{character.name} n'a pas réussi à monter de niveau.")
 
 @bot.slash_command(name="die", help="Destroy current character.")
 async def die(ctx):
@@ -273,7 +288,7 @@ async def die(ctx):
     
     character.die()
     
-    await ctx.respond(f"Character {character.name} is no more. Create a new one with `!create`.")
+    await ctx.respond(f"Le personnage {character.name} n'est plus. Créez-en un nouveau avec `/create`.")
 
 @bot.slash_command(name="reset", help="[DEV] Destroy and recreate current character.")
 async def reset(ctx):
