@@ -5,15 +5,15 @@ attack:
 - 90
 battling: null
 defense: 1
-gold: 3
-hp: 16
+gold: 0
+hp: 20
 inventory: []
 level: 1
 mana: 0
 max_hp: 20
 mode:
 - ADVENTURE
-name: Void
+name: Xoni
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
-user_id: 276384853526839296
-xp: 3
+user_id: 584312780140707861
+xp: 0

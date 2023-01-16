@@ -5,15 +5,15 @@ attack:
 - 90
 battling: null
 defense: 1
-gold: 533
-hp: 442
+gold: 3
+hp: 15
 inventory: []
-level: 6
+level: 1
 mana: 0
-max_hp: 450
+max_hp: 20
 mode:
 - ADVENTURE
-name: Jean-Marie Bigard
-skin: https://media.discordapp.net/attachments/619262155685888000/1064614049670778970/image.png
+name: Aiden
+skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 365714383793422338
-xp: 150
+xp: 3

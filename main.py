@@ -69,7 +69,7 @@ async def create(ctx, character_name=None):
             "name": character_name,
             "hp": 20,
             "max_hp": 20,
-            "attack": 2,
+            "attack": [30,90],
             "defense": 1,
             "mana": 0,
             "level": 1,
@@ -101,7 +101,7 @@ async def status(ctx):
 
     embed.add_field(name="Stats", value=f"""
 **HP:**    {character.hp}/{character.max_hp}
-**ATTACK:**   {character.attack}
+**ATTACK:**   {character.adb}
 **DEFENSE:**   {character.defense}
 **MANA:**  {character.mana}
 **LEVEL:** {character.level}
