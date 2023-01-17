@@ -166,3 +166,4 @@ class Character(Actor):
     def die(self):
         self.hp = 0
         self.mode = GameMode.DEAD
+        self.save_to_db()

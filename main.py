@@ -301,4 +301,21 @@ async def reset(ctx):
     await ctx.respond(f"Character deleted.")
     await create(ctx)
 
+@bot.slash_command(name="heal", help="Heal character")
+async def heal(ctx):
+    character = load_character(ctx.author.id)
+    
+    if character.mode == GameMode.BATTLE:
+        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat.")
+        return
+    
+    character.hp = character.max_hp
+
+    if character.mode == GameMode.DEAD:
+        character.mode = GameMode.ADVENTURE
+
+    character.save_to_db()
+
+    await ctx.respond(f"Le personnage {character.name} a été soigné.")
+
 bot.run(DISCORD_TOKEN)

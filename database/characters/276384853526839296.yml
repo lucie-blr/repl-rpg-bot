@@ -3,10 +3,10 @@ area_id: forest
 attack:
 - 30
 - 90
-battling: null
+battling: 9
 defense: 1
-gold: 3
-hp: 16
+gold: 12
+hp: 20
 inventory: []
 level: 1
 mana: 0
@@ -16,4 +16,4 @@ mode:
 name: Void
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 276384853526839296
-xp: 3
+xp: 12

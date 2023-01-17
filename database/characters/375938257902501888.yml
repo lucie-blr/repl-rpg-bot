@@ -1,19 +1,19 @@
-adb: 10
+adb: 11
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
 defense: 1
-gold: 0
-hp: 20
+gold: 21
+hp: 21
 inventory: []
-level: 1
+level: 2
 mana: 0
-max_hp: 20
+max_hp: 21
 mode:
 - ADVENTURE
 name: Aries
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 375938257902501888
-xp: 0
+xp: 1
