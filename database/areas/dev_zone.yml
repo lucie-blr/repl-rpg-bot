@@ -102,7 +102,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1673992044.502959
+    last_death: 1673909047.0677826
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
@@ -154,6 +154,6 @@ entitys:
     respawn: 15
     xp: 3
 name: forest
-nearby:
-- dev_zone
 type: PVE_AREA
+nearby:
+  - forest

@@ -7,6 +7,7 @@ from api.actor import *
 from api.character import *
 from api.enemy import *
 from api.area import *
+from api.helper_function import *
 
 import yaml
 
@@ -101,6 +102,7 @@ async def status(ctx):
 
     embed.add_field(name="Stats", value=f"""
 **HP:**    {character.hp}/{character.max_hp}
+{endurance_bar(character)}
 **ATTACK:**   {character.adb}
 **DEFENSE:**   {character.defense}
 **MANA:**  {character.mana}
@@ -317,5 +319,56 @@ async def heal(ctx):
     character.save_to_db()
 
     await ctx.respond(f"Le personnage {character.name} a été soigné.")
+
+#class MyView(discord.ui.View):
+#    #options = options that i want
+#    
+#    @discord.ui.select( 
+#        placeholder = "Choose a Flavor!", 
+#        min_values = 1, 
+#        max_values = 1, 
+#        options = options
+#    )
+#    async def select_callback(self, select, interaction): 
+#        await interaction.response.send_message(f"Awesome! I like {select.values[0]} too!")
+
+@bot.slash_command(name="view", help="Change the area of the character")
+async def view(ctx):
+    #character = load_character(ctx.author.id)
+#
+    #if character.mode == GameMode.DEAD:
+    #    await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
+    #    return
+#
+    #if character.mode!= GameMode.ADVENTURE:
+    #    await ctx.respond("Vous ne pouvez pas appeler cette commande en combat.")
+#
+    #area = Area(character.area_id)
+#
+    #nearby = area.nearby
+#
+    #t = ""
+    #for a in nearby:
+    #    t += a
+
+    options = [ # the list of options from which users can choose, a required field
+            discord.SelectOption(
+                label="Vanilla",
+                description="Pick this if you like vanilla!"
+            ),
+            discord.SelectOption(
+                label="Chocolate",
+                description="Pick this if you like chocolate!"
+            ),
+            discord.SelectOption(
+                label="Strawberry",
+                description="Pick this if you like strawberry!"
+            )
+        ]
+    
+    await ctx.respond("t", ephemeral = True, view = MyView(options))
+
+    character.save_to_db()
+
 
 bot.run(DISCORD_TOKEN)
