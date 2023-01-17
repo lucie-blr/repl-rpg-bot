@@ -5,15 +5,15 @@ attack:
 - 90
 battling: null
 defense: 1
-gold: 6
-hp: 11
+gold: 0
+hp: 20
 inventory: []
 level: 1
 mana: 0
 max_hp: 20
 mode:
 - ADVENTURE
-name: Aiden
+name: Aries
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
-user_id: 365714383793422338
-xp: 6
+user_id: 375938257902501888
+xp: 0
