@@ -11,8 +11,9 @@ class Character(Actor):
 
     level_cap = 10
 
-    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, gold, inventory, mode, battling, user_id, area_id,skin):
-        super().__init__(name, hp, max_hp, attack, defense, xp, gold)
+    def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, 
+    gold, inventory, mode, battling, user_id, area_id,skin, adb):
+        super().__init__(name, hp, max_hp, attack, defense, xp, gold, adb)
         self.mana = mana
         self.level = level
         
@@ -29,16 +30,20 @@ class Character(Actor):
         self.skin = skin
 
     def save_to_db(self):
-        db = yaml.safe_load(open('./game.yml'))
 
         character_dict = deepcopy(vars(self))
         if self.battling != None:
             character_dict["battling"] = self.battling
         character_dict['mode'] = [self.mode.name]
 
-        db["characters"][self.user_id] = character_dict
-
-        with open(f"game.yml", "w") as f:
+        db = character_dict
+        try:
+            with open(f'./database/characters/{self.user_id}.yml', "w") as f:
+                yaml.dump(db, f)
+        except:
+            f = open(f'./database/characters/{self.user_id}.yml', 'x')
+            f.close()
+            with open(f'./database/characters/{self.user_id}.yml', "w") as f:
                 yaml.dump(db, f)
 
     def hunt(self):
@@ -161,3 +166,4 @@ class Character(Actor):
     def die(self):
         self.hp = 0
         self.mode = GameMode.DEAD
+        self.save_to_db()

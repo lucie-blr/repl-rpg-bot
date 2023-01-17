@@ -4,23 +4,25 @@ from api.gamemode import GameMode
 
 class Actor:
 
-    def __init__(self, name, hp, max_hp, attack, defense, xp, gold):
+    def __init__(self, name, hp, max_hp, attack, defense, xp, gold, adb):
         self.name = name
         self.hp = hp
         self.max_hp = max_hp
         self.attack = attack
+        self.adb = adb
         self.defense = defense
         self.xp = xp
         self.gold = gold
 
     def fight(self, other):
-        defense = min(other.defense, 19) # cap defense value
-        chance_to_hit = random.randint(0, 20-defense)
-        if chance_to_hit: 
-            damage = self.attack
-        else:
-            damage = 0
+        attack = random.randint(self.attack[0], self.attack[1])
+
+        print(attack)
+
+        damage = round(self.adb * (round(attack / 10) / 10))
+
+        print(damage)
         
         other.hp -= damage
 
-        return (self.attack, other.hp <= 0) #(damage, fatal)
+        return (damage, other.hp <= 0) #(damage, fatal)
