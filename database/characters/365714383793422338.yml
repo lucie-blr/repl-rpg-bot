@@ -1,11 +1,11 @@
 adb: 14
-area_id: forest
+area_id: river
 attack:
 - 30
 - 90
 battling: null
 defense: 1
-gold: 282
+gold: 285
 hp: 32
 inventory: []
 level: 5
@@ -16,4 +16,4 @@ mode:
 name: Aiden
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 365714383793422338
-xp: 10
+xp: 13

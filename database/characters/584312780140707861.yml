@@ -3,7 +3,7 @@ area_id: forest
 attack:
 - 30
 - 90
-battling: 8
+battling: null
 defense: 1
 gold: 12
 hp: 20
@@ -12,7 +12,7 @@ level: 1
 mana: 0
 max_hp: 20
 mode:
-- BATTLE
+- ADVENTURE
 name: Xoni
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 584312780140707861
