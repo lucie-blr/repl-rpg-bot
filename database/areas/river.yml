@@ -1,4 +1,4 @@
-area: forest
+area: river
 battling:
   1:
     adb: 5
@@ -117,7 +117,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1673946706.777023
+    last_death: 1674058571.2367892
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
@@ -153,7 +153,7 @@ entitys:
     name: "\U0001F43A Lone wolf"
     respawn: 15
     xp: 3
-name: rivière
-type: PVE_AREA
+name: "rivi\xE8re"
 nearby:
-  - forest
+- forest
+type: PVE_AREA
