@@ -30,6 +30,36 @@ battling:
     name: "\U0001F43A Lone wolf"
     respawn: 15
     xp: 3
+  3:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 3
+    last_death: 1673992616.4673216
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
+  4:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 1
+    last_death: 1674028029.6311293
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
   8:
     adb: 5
     attack:
@@ -63,36 +93,6 @@ battling:
 channel_id: 1064638646004760636
 description: A forest full of wolf
 entitys:
-  3:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 10
-    last_death: 1673903121.0459487
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  4:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 10
-    last_death: 1673894409.768778
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
   5:
     adb: 5
     attack:
@@ -102,7 +102,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1673992044.502959
+    last_death: 1674055834.5811474
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
@@ -117,7 +117,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1673946706.777023
+    last_death: 1674055920.5692294
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
@@ -132,7 +132,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1673894409.768778
+    last_death: 1674055849.321914
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
@@ -147,7 +147,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1673909058.2024467
+    last_death: 1674055884.5902622
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
@@ -155,5 +155,5 @@ entitys:
     xp: 3
 name: forest
 nearby:
-- dev_zone
+- river
 type: PVE_AREA

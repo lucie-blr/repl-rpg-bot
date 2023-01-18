@@ -60,7 +60,7 @@ battling:
     name: "\U0001F43A Lone wolf"
     respawn: 15
     xp: 3
-channel_id: 1064638646004760636
+channel_id: 1065293608221167646
 description: A forest full of wolf
 entitys:
   3:
@@ -153,7 +153,7 @@ entitys:
     name: "\U0001F43A Lone wolf"
     respawn: 15
     xp: 3
-name: forest
+name: rivière
 type: PVE_AREA
 nearby:
   - forest

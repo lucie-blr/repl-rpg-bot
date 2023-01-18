@@ -46,6 +46,13 @@ bot = commands.Bot(command_prefix="!")
 async def on_ready():
     print(f"{bot.user} has connected to Discord!")
 
+@bot.event
+async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
+    if isinstance(error, commands.CommandOnCooldown):
+        await ctx.respond("This command is currently on cooldown!", ephemeral=True)
+    else:
+        raise error  # Here we raise other errors to ensure they aren't ignored
+
 
 cmd = SlashCommandGroup("rpg", "Commands for server management!")  
 
@@ -108,6 +115,7 @@ async def status(ctx):
 **MANA:**  {character.mana}
 **LEVEL:** {character.level}
 **XP:**    {character.xp}/{character.xp+xp_needed}
+{xp_bar(character)}
 **AREA:** {character.area_id}
     """, inline=True)
 
@@ -124,6 +132,7 @@ async def status(ctx):
     await ctx.respond(embed=embed) 
 
 @bot.slash_command(name="hunt", help="Look for an enemy to fight.")
+@commands.cooldown(1,15)
 async def hunt(ctx):
     character = load_character(ctx.author.id)
     area = Area(character.area_id)
@@ -158,6 +167,7 @@ async def hunt(ctx):
     await ctx.respond(f"Vous rencontrez {enemy.name}. Est-ce que vous `/fight` ou `/flee`?")
 
 @bot.slash_command(name="fight", help="Fight the current enemy.")
+@commands.cooldown(1,2)
 async def fight(ctx):
     character = load_character(ctx.author.id)
     area = Area(character.area_id)
@@ -218,6 +228,7 @@ async def fight(ctx):
     await ctx.respond(f"La bataille fait rage ! Est-ce que vous `/fight` ou `/flee`?")
 
 @bot.slash_command(name="flee", help="Flee the current enemy.")
+@commands.cooldown(1,15)
 async def flee(ctx):
     character = load_character(ctx.author.id)
     area = Area(character.area_id)
@@ -250,6 +261,7 @@ async def flee(ctx):
         await ctx.respond(f"{character.name} fuit {enemy.name} Avec sa vie intact, mais pas sa dignité. HP: {character.hp}/{character.max_hp}")
 
 @bot.slash_command(name="levelup", help="Advance to the next level. Specify a stat to increase (HP, ATTACK, DEFENSE).")
+@commands.cooldown(1,15)
 async def levelup(ctx, 
     increase:Option(str, "increase", choices=['ATTACK', 'DEFENSE'], required=True)):
     character = load_character(ctx.author.id)
@@ -320,53 +332,73 @@ async def heal(ctx):
 
     await ctx.respond(f"Le personnage {character.name} a été soigné.")
 
-#class MyView(discord.ui.View):
-#    #options = options that i want
-#    
-#    @discord.ui.select( 
-#        placeholder = "Choose a Flavor!", 
-#        min_values = 1, 
-#        max_values = 1, 
-#        options = options
-#    )
-#    async def select_callback(self, select, interaction): 
-#        await interaction.response.send_message(f"Awesome! I like {select.values[0]} too!")
+async def area_callback(interaction):
+    channel = interaction.channel
 
-@bot.slash_command(name="view", help="Change the area of the character")
-async def view(ctx):
-    #character = load_character(ctx.author.id)
-#
-    #if character.mode == GameMode.DEAD:
-    #    await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
-    #    return
-#
-    #if character.mode!= GameMode.ADVENTURE:
-    #    await ctx.respond("Vous ne pouvez pas appeler cette commande en combat.")
-#
-    #area = Area(character.area_id)
-#
-    #nearby = area.nearby
-#
-    #t = ""
-    #for a in nearby:
-    #    t += a
+    select = interaction.data
 
-    options = [ # the list of options from which users can choose, a required field
-            discord.SelectOption(
-                label="Vanilla",
-                description="Pick this if you like vanilla!"
-            ),
-            discord.SelectOption(
-                label="Chocolate",
-                description="Pick this if you like chocolate!"
-            ),
-            discord.SelectOption(
-                label="Strawberry",
-                description="Pick this if you like strawberry!"
-            )
-        ]
+    values = select.get("values")
+
+    area = Area(values[0])
+
+    user = interaction.user
+
+    new_channel = interaction.guild.get_channel(area.channel_id)
+
+    perms = channel.overwrites_for(user)
+
+    perms.view_channel = False
+
+    await channel.set_permissions(target=user,overwrite= perms)
+
+    perms = new_channel.overwrites_for(user)
+
+    perms.view_channel = True
+
+    await new_channel.set_permissions(target=user, overwrite=perms)
+
+    character = load_character(user.id)
+
+    character.area_id = values[0]
+
+    character.save_to_db()
+
+    await new_channel.send(f"Bienvenue {character.name} dans {area.name} !")
+
+
+
+@bot.slash_command(name="move", help="Change the area of the character")
+async def move(ctx):
+    character = load_character(ctx.author.id)
+
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
+        return
+
+    if character.mode!= GameMode.ADVENTURE:
+        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat.")
+        return
+
+    area = Area(character.area_id)
+
+    nearby = area.nearby
+
+    options = []
+
+    for area_id in nearby:
+        new_area = Area(area_id)
+
+        options.append(discord.SelectOption(label=new_area.name, value=area_id))
     
-    await ctx.respond("t", ephemeral = True, view = MyView(options))
+    select = discord.ui.Select(options = options, min_values=1, max_values=1)
+
+    select.callback = area_callback
+
+    view = discord.ui.View()
+    
+    view.add_item(item=select)
+
+    await ctx.respond("Où voulez-vous aller ?", view = view, ephemeral=True)
 
     character.save_to_db()
 

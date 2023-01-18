@@ -20,7 +20,26 @@ def endurance_bar(entity) :
 
     result = filling_char_number * filling_char
     result += background_char_number * background_char
-    result += f" **{entity.hp}/{entity.max_hp}**"
+
+    return result
+
+def xp_bar(entity) :
+    """Entrée : type Character ou Enemy
+    Sortie : type String"""
+
+    # Nombre total de carrés de couleur composant la barre de vie
+    total_char_number = 10
+
+    filling_char = "\N{LARGE GREEN SQUARE}"
+    background_char = "\N{LARGE PURPLE SQUARE}"
+
+    xp_ratio = entity.xp / (12+((entity.level)+1)**3)
+
+    filling_char_number = ceil(xp_ratio * total_char_number)
+    background_char_number = total_char_number - filling_char_number
+
+    result = filling_char_number * filling_char
+    result += background_char_number * background_char
 
     return result
 
