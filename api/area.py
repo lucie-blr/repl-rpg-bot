@@ -13,6 +13,7 @@ class Area:
         self.entitys = db.get("entitys")
         self.battling = db.get("battling")
         self.type = AreaType[db.get("type")]
+        self.nearby = db.get("nearby")
         self.area = channel
 
     def rehydrate(self):
@@ -24,6 +25,7 @@ class Area:
         self.entitys = db.get("entitys")
         self.battling = db.get("battling")
         self.type = AreaType[db.get("type")]
+        self.nearby = db.get("nearby")
 
     def save_to_db(self):
         db = yaml.safe_load(open(f'./database/areas/{self.area}.yml'))

@@ -1,19 +1,19 @@
-adb: 10
-area_id: forest
+adb: 12
+area_id: river
 attack:
 - 30
 - 90
-battling: 9
+battling: null
 defense: 1
-gold: 12
-hp: 20
+gold: 66
+hp: 24
 inventory: []
-level: 1
+level: 3
 mana: 0
-max_hp: 20
+max_hp: 24
 mode:
 - ADVENTURE
 name: Void
-skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
+skin: https://media.discordapp.net/attachments/919160541291888703/1065271808460329001/Illustration11_1.png
 user_id: 276384853526839296
-xp: 12
+xp: 7

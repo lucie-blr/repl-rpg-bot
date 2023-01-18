@@ -4,16 +4,16 @@ attack:
 - 30
 - 90
 battling: null
-defense: 1
-gold: 21
-hp: 21
+defense: 2
+gold: 72
+hp: 7
 inventory: []
-level: 2
+level: 3
 mana: 0
-max_hp: 21
+max_hp: 24
 mode:
 - ADVENTURE
 name: Aries
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 375938257902501888
-xp: 1
+xp: 13

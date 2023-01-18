@@ -30,36 +30,6 @@ battling:
     name: "\U0001F43A Lone wolf"
     respawn: 15
     xp: 3
-  3:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 3
-    last_death: 1673992616.4673216
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  4:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 1
-    last_death: 1674028029.6311293
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
   8:
     adb: 5
     attack:
@@ -90,9 +60,39 @@ battling:
     name: "\U0001F43A Lone wolf"
     respawn: 15
     xp: 3
-channel_id: 1064638646004760636
+channel_id: 1065293608221167646
 description: A forest full of wolf
 entitys:
+  3:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673903121.0459487
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
+  4:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1673894409.768778
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
   5:
     adb: 5
     attack:
@@ -102,7 +102,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674055834.5811474
+    last_death: 1673909047.0677826
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
@@ -117,7 +117,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674055920.5692294
+    last_death: 1673946706.777023
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
@@ -132,7 +132,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674055849.321914
+    last_death: 1673894409.768778
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
@@ -147,13 +147,13 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674055884.5902622
+    last_death: 1673909058.2024467
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
     respawn: 15
     xp: 3
-name: forest
-nearby:
-- river
+name: rivière
 type: PVE_AREA
+nearby:
+  - forest
