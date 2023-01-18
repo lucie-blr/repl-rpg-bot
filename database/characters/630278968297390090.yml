@@ -1,11 +1,11 @@
 adb: 10
-area_id: river
+area_id: forest
 attack:
 - 30
 - 90
 battling: null
 defense: 1
-gold: 0
+gold: 6
 hp: 20
 inventory: []
 level: 1
@@ -16,4 +16,4 @@ mode:
 name: "Om\xE9a-Zesta"
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 630278968297390090
-xp: 0
+xp: 6

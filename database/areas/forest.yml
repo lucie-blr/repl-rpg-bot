@@ -147,7 +147,7 @@ entitys:
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674055884.5902622
+    last_death: 1674057167.5549526
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
