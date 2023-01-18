@@ -90,6 +90,21 @@ battling:
     name: "\U0001F43A Lone wolf"
     respawn: 15
     xp: 3
+  10:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 3
+    last_death: 1674057134.4075444
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    xp: 3
 channel_id: 1064638646004760636
 description: A forest full of wolf
 entitys:
@@ -133,21 +148,6 @@ entitys:
     gold: 3
     hp: 10
     last_death: 1674055849.321914
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  10:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 10
-    last_death: 1674055884.5902622
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
