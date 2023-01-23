@@ -79,6 +79,8 @@ class Character(Actor):
 
         player = enemy_dict.get("battling")
 
+        player = {}
+
         player[self.user_id] = 0
 
         area.entitys.pop(enemy, None)
