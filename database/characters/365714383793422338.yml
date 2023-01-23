@@ -1,19 +1,19 @@
 adb: 14
-area_id: river
+area_id: forest
 attack:
 - 30
 - 90
 battling: null
 defense: 1
-gold: 285
-hp: 32
+gold: 318
+hp: 0
 inventory: []
 level: 5
 mana: 0
-max_hp: 36
+max_hp: 3600
 mode:
-- ADVENTURE
+- DEAD
 name: Aiden
-skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
+skin: https://media.discordapp.net/attachments/619262155685888000/1065312713401696256/Illustration79_1.png?width=630&height=630
 user_id: 365714383793422338
-xp: 13
+xp: 46
