@@ -292,6 +292,55 @@ class FightView(discord.ui.View): # Create a class called MyView that subclasses
 
         await interaction.response.edit(embed) # Send a message when the button is clicked
 
+    # @discord.ui.button(label="Spell!", style=discord.ButtonStyle.primary, emoji="😎")
+    # async def spell_callback(self,button,interaction):
+    #     character = load_character(interaction.user.id)
+    #     area = Area(character.area_id)
+
+    #     if interaction.channel.id != area.channel_id:
+    #         return
+
+    #     if character.mode == GameMode.DEAD:
+    #         return
+
+    #     if character.mode != GameMode.BATTLE:
+    #         return
+
+    #     # Simulate battle
+    #     enemy_id = character.battling
+    #     area.rehydrate()
+    #     enemy_dict = area.battling.get(enemy_id)
+    #     enemy = Enemy(**enemy_dict)
+
+    #     damage, killed = character.fight(enemy)
+
+    #     embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
+    #     embed.set_thumbnail(url=f"{enemy.skin}")
+    #     embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+        
+    #     if killed:
+    #         t = ""
+    #         for i in range(0, 10):
+    #             t +=":red_square:"
+    #         embed.add_field(name=f"{enemy.name} life", value=t, inline=True)
+    #         xp, gold, ready_to_level_up = character.defeat(enemy)
+    #         embed.add_field(name=f"{character.name} gagne !", value=f"Et gagne {gold} gold, {xp} XP !", inline=False)
+    #     else:
+    #         embed.add_field(name=f"{enemy.name} life", value=f"{endurance_bar(enemy)}", inline=True)
+
+    #     guild = bot.get_guild(enemy.battle_message[2])
+
+    #     channel = guild.get_channel(enemy.battle_message[1])
+
+    #     message = await channel.fetch_message(enemy.battle_message[0])
+    #     if killed:
+    #         await message.edit(embed=embed, view=None)
+    #     else:
+    #         await message.edit(embed=embed, view=FightView())
+
+    #     await interaction.response.send_message(f"Vous avez fait {damage} dégats !", ephemeral=True)
+
+
 
 @bot.slash_command(name="hunt", help="Look for an enemy to fight.")
 @commands.cooldown(1,15)
