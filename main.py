@@ -251,8 +251,46 @@ class FightView(discord.ui.View): # Create a class called MyView that subclasses
 
 
     @discord.ui.button(label="Flee!", style=discord.ButtonStyle.primary, emoji="😎") # Create a button with the label "😎 Click me!" with color Blurple
-    async def button_callback(self, button, interaction):
-        await interaction.response.send_message("You clicked the button!") # Send a message when the button is clicked
+    async def flee_callback(self, button, interaction):
+
+        character = load_character(interaction.user.id)
+        area = Area(character.area_id)
+
+        if interaction.channel.id != area.channel_id:
+            await interaction.reponse.respond("Vous ne pouvez utiliser cette commande que quand des channels de jeu.!")
+            return
+
+        if character.mode == GameMode.DEAD:
+            await interaction.response.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
+            return
+
+        if character.mode != GameMode.BATTLE:
+            await interaction.response.respond("Vous ne pouvez pas appeler cette commande en combat!")
+            return
+
+
+        enemy_id = character.battling
+        area.rehydrate()
+        enemy_dict = area.battling.get(enemy_id)
+        enemy = Enemy(**enemy_dict)
+        damage, killed = character.flee(enemy)
+
+        embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
+        embed.set_thumbnail(url=f"{enemy.skin}")
+        
+
+        if killed:
+            character.die()
+            embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+            embed.add_field(name= "Fuite", value=f"{character.name} est mort en essayant de fuir {enemy.name}, et n'est plus. Rest in peace, brave aventurier.")
+        elif damage:
+            embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+            embed.add_field(name= "Fuite", value=f"{character.name} fuit {enemy.name}, et prend {damage} dégâts. HP: {character.hp}/{character.max_hp}")
+        else:
+            embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+            embed.add_field(name= "Fuite", value=f"{character.name} fuit {enemy.name} Avec sa vie intact, mais pas sa dignité. HP: {character.hp}/{character.max_hp}")
+
+        await interaction.response.edit(embed) # Send a message when the button is clicked
 
 
 @bot.slash_command(name="hunt", help="Look for an enemy to fight.")
@@ -309,50 +347,50 @@ async def hunt(ctx):
     area.save_to_db()
     
 
-@bot.slash_command(name="fight", help="Fight the current enemy.")
-@commands.cooldown(1,2)
-async def fight(ctx):
-    character = load_character(ctx.author.id)
-    area = Area(character.area_id)
-
-    if ctx.channel.id != area.channel_id:
-        await ctx.respond("Vous ne pouvez utiliser cette commande que quand des channels de jeu.!")
-        return
-    
-    if character.mode == GameMode.DEAD:
-        await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
-        return
-
-    if character.mode != GameMode.BATTLE:
-        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat!")
-        return
-        
-    # Simulate battle
-    enemy_id = character.battling
-    area.rehydrate()
-    enemy_dict = area.battling.get(enemy_id)
-    enemy = Enemy(**enemy_dict)
-
-    # Character attacks
-    damage, killed = character.fight(enemy)
-    if damage:
-        await ctx.respond(f"{character.name} attaque {enemy.name}, et fait {damage} dégâts !")
-    else:
-        await ctx.respond(f"{character.name} essaye d'attaquer {enemy.name}, mais râte !")
-
-        # End battle in victory if enemy killed
-    if killed:
-        xp, gold, ready_to_level_up = character.defeat(enemy)
-        
-        await ctx.respond(f"{character.name} a vaincu le {enemy.name}, et gagne {xp} XP et {gold} GOLD. HP: {character.hp}/{character.max_hp}.")
-        
-        if ready_to_level_up:
-            await ctx.respond(f"{character.name} a gagné assez d'XP pour monter au niveau {character.level+1}. Entrez `/levelup` avec la stat (ATTACK, DEFENSE) que vous voudriez amméliorer. e.g. `/levelup defense` ou `/levelup attack`.")
-            
-        return
-    
-        # No deaths, battle continues
-    await ctx.respond(f"La bataille fait rage ! Est-ce que vous `/fight` ou `/flee`?")
+#@bot.slash_command(name="fight", help="Fight the current enemy.")
+#@commands.cooldown(1,2)
+#async def fight(ctx):
+#    character = load_character(ctx.author.id)
+#    area = Area(character.area_id)
+#
+#    if ctx.channel.id != area.channel_id:
+#        await ctx.respond("Vous ne pouvez utiliser cette commande que quand des channels de jeu.!")
+#        return
+#    
+#    if character.mode == GameMode.DEAD:
+#        await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
+#        return
+#
+#    if character.mode != GameMode.BATTLE:
+#        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat!")
+#        return
+#        
+#    # Simulate battle
+#    enemy_id = character.battling
+#    area.rehydrate()
+#    enemy_dict = area.battling.get(enemy_id)
+#    enemy = Enemy(**enemy_dict)
+#
+#    # Character attacks
+#    damage, killed = character.fight(enemy)
+#    if damage:
+#        await ctx.respond(f"{character.name} attaque {enemy.name}, et fait {damage} dégâts !")
+#    else:
+#        await ctx.respond(f"{character.name} essaye d'attaquer {enemy.name}, mais râte !")
+#
+#        # End battle in victory if enemy killed
+#    if killed:
+#        xp, gold, ready_to_level_up = character.defeat(enemy)
+#        
+#        await ctx.respond(f"{character.name} a vaincu le {enemy.name}, et gagne {xp} XP et {gold} GOLD. HP: {character.hp}/{character.max_hp}.")
+#        
+#        if ready_to_level_up:
+#            await ctx.respond(f"{character.name} a gagné assez d'XP pour monter au niveau {character.level+1}. Entrez `/levelup` avec la stat (ATTACK, DEFENSE) que vous voudriez amméliorer. e.g. `/levelup defense` ou `/levelup attack`.")
+#            
+#        return
+#    
+#        # No deaths, battle continues
+#    await ctx.respond(f"La bataille fait rage ! Est-ce que vous `/fight` ou `/flee`?")
 
 @bot.slash_command(name="flee", help="Flee the current enemy.")
 @commands.cooldown(1,15)

@@ -83,6 +83,8 @@ class Character(Actor):
 
         player[self.user_id] = 0
 
+        enemy_dict["battling"] = player
+
         area.entitys.pop(enemy, None)
         area.battling[enemy] = enemy_dict
 
@@ -100,6 +102,8 @@ class Character(Actor):
         enemy = Enemy(**enemy_dict)
 
         outcome, killed = super().fight(enemy)
+
+        enemy.battling[self.user_id] += outcome
         
         # Save changes to DB after state change
         self.save_to_db()
@@ -114,12 +118,23 @@ class Character(Actor):
         if random.randint(0,1+self.defense): # flee unscathed
             damage = 0
         else: # take damage
-            damage = enemy.attack/2
+            attack = random.randint(enemy.attack[0], enemy.attack[1])
+            damage = round(enemy.adb * (round(attack / 10) / 10))
             self.hp -= damage
 
         # Exit battle mode
         self.battling = None
         self.mode = GameMode.ADVENTURE
+
+        area = Area(self.area_id)
+
+        enemy.battling.pop(self.user_id, None)
+                    
+        area.rehydrate()
+
+        area.save_enemy(enemy, self.enemy_id)
+
+        area.save_to_db()
 
         # Save to DB after state change
         self.save_to_db()

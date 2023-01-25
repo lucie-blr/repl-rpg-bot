@@ -1,19 +1,19 @@
-adb: 12
+adb: 13
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
 defense: 2
-gold: 144
-hp: 0
+gold: 273
+hp: 19
 inventory: []
-level: 4
+level: 5
 mana: 0
-max_hp: 29
+max_hp: 36
 mode:
-- DEAD
+- ADVENTURE
 name: "Om\xE9a-Zesta"
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 630278968297390090
-xp: 9
+xp: 1

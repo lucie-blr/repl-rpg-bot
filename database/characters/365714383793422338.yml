@@ -5,15 +5,15 @@ attack:
 - 90
 battling: null
 defense: 1
-gold: 318
-hp: 0
+gold: 321
+hp: 710
 inventory: []
 level: 5
 mana: 0
 max_hp: 3600
 mode:
-- DEAD
+- ADVENTURE
 name: Aiden
 skin: https://media.discordapp.net/attachments/619262155685888000/1065312713401696256/Illustration79_1.png?width=630&height=630
 user_id: 365714383793422338
-xp: 46
+xp: 49

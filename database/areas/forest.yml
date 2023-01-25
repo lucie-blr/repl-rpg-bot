@@ -9,17 +9,62 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1067044024562745356
+    - 1067835615011409961
     - 1064638646004760636
     - 887675595419451396
     battling:
-      375938257902501888: 0
-      696712993848819742: 0
+      276384853526839296: 13
+      630278968297390090: 11
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674473526.0127792
+    last_death: 1674662261.0763671
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
+    xp: 3
+  2:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    battle_message:
+    - 1067835878929604734
+    - 1064638646004760636
+    - 887675595419451396
+    battling:
+      276384853526839296: 16
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1674662321.7200484
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Lone wolf"
+    respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
+    xp: 3
+  3:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    battle_message:
+    - 1067835051401826434
+    - 1064638646004760636
+    - 887675595419451396
+    battling:
+      276384853526839296: 18
+      630278968297390090: 11
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1674662139.6580548
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
