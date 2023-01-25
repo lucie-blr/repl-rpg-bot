@@ -1,19 +1,19 @@
-adb: 13
+adb: 12
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
-defense: 2
-gold: 273
-hp: 19
+defense: 1
+gold: 114
+hp: 0
 inventory: []
-level: 5
+level: 3
 mana: 0
-max_hp: 36
+max_hp: 24
 mode:
-- ADVENTURE
-name: "Om\xE9a-Zesta"
+- DEAD
+name: AzuRT
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
-user_id: 630278968297390090
-xp: 1
+user_id: 696712993848819742
+xp: 55

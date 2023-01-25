@@ -1,12 +1,12 @@
 adb: 12
-area_id: river
+area_id: forest
 attack:
 - 30
 - 90
 battling: null
 defense: 1
-gold: 66
-hp: 24
+gold: 129
+hp: 11
 inventory: []
 level: 3
 mana: 0
@@ -16,4 +16,4 @@ mode:
 name: Void
 skin: https://media.discordapp.net/attachments/919160541291888703/1065271808460329001/Illustration11_1.png
 user_id: 276384853526839296
-xp: 7
+xp: 70

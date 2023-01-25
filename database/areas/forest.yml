@@ -1,157 +1,75 @@
 area: forest
-battling:
+battling: {}
+channel_id: 1064638646004760636
+description: A forest full of wolf
+entitys:
   1:
     adb: 5
     attack:
     - 70
     - 100
+    battle_message:
+    - 1067835615011409961
+    - 1064638646004760636
+    - 887675595419451396
+    battling:
+      276384853526839296: 13
+      630278968297390090: 11
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1673902369.968491
+    last_death: 1674662261.0763671
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
     respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
     xp: 3
   2:
     adb: 5
     attack:
     - 70
     - 100
+    battle_message:
+    - 1067835878929604734
+    - 1064638646004760636
+    - 887675595419451396
+    battling:
+      276384853526839296: 16
     defense: 1
     enemy: lone_wolf
     gold: 3
-    hp: 2
-    last_death: 1673934923.6140194
+    hp: 10
+    last_death: 1674662321.7200484
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
     respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
     xp: 3
   3:
     adb: 5
     attack:
     - 70
     - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 3
-    last_death: 1673992616.4673216
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  4:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 1
-    last_death: 1674028029.6311293
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  8:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 3
-    last_death: 1673902791.028351
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  9:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 5
-    last_death: 1673902661.0030015
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-channel_id: 1064638646004760636
-description: A forest full of wolf
-entitys:
-  5:
-    adb: 5
-    attack:
-    - 70
-    - 100
+    battle_message:
+    - 1067835051401826434
+    - 1064638646004760636
+    - 887675595419451396
+    battling:
+      276384853526839296: 18
+      630278968297390090: 11
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674055834.5811474
+    last_death: 1674662139.6580548
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Lone wolf"
     respawn: 15
-    xp: 3
-  6:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 10
-    last_death: 1674055920.5692294
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  7:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 10
-    last_death: 1674055849.321914
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
-    xp: 3
-  10:
-    adb: 5
-    attack:
-    - 70
-    - 100
-    defense: 1
-    enemy: lone_wolf
-    gold: 3
-    hp: 10
-    last_death: 1674057167.5549526
-    max_hp: 10
-    min_level: 2
-    name: "\U0001F43A Lone wolf"
-    respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
     xp: 3
 name: forest
 nearby:

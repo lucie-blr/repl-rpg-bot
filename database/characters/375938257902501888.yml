@@ -5,15 +5,15 @@ attack:
 - 90
 battling: null
 defense: 2
-gold: 72
-hp: 7
+gold: 117
+hp: 0
 inventory: []
 level: 3
 mana: 0
 max_hp: 24
 mode:
-- ADVENTURE
+- DEAD
 name: Aries
 skin: https://media.discordapp.net/attachments/751906530382839918/1065310142050095165/Sans_titre_134_20230118174200.png
 user_id: 375938257902501888
-xp: 13
+xp: 58
