@@ -8,7 +8,7 @@ def endurance_bar(entity) :
     Sortie : type String"""
 
     # Nombre total de carrés de couleur composant la barre de vie
-    total_char_number = 10
+    total_char_number = 8
 
     filling_char = "\N{LARGE GREEN SQUARE}"
     background_char = "\N{LARGE RED SQUARE}"
@@ -28,7 +28,7 @@ def xp_bar(entity) :
     Sortie : type String"""
 
     # Nombre total de carrés de couleur composant la barre de vie
-    total_char_number = 10
+    total_char_number = 8
 
     filling_char = "\N{LARGE GREEN SQUARE}"
     background_char = "\N{LARGE PURPLE SQUARE}"
@@ -37,9 +37,11 @@ def xp_bar(entity) :
 
     filling_char_number = ceil(xp_ratio * total_char_number)
     background_char_number = total_char_number - filling_char_number
-
     result = filling_char_number * filling_char
     result += background_char_number * background_char
+
+    if len(result) > total_char_number:
+        result = result[:-(len(result)-total_char_number)]
 
     return result
 

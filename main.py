@@ -1,4 +1,4 @@
-import os, discord
+import os, discord, datetime
 from discord.ext import commands, tasks
 from discord.commands import SlashCommandGroup, Option
 
@@ -47,9 +47,24 @@ bot = commands.Bot(command_prefix="!")
 async def on_ready():
     print(f"{bot.user} has connected to Discord!")
     mob_attack.start()
+    dodo.start()
+
+@tasks.loop(seconds=1200)
+async def dodo():
+
+    date = datetime.datetime.today()
+    print(date)
+    print(date.hour)
+    if date.hour == (22):
+       guild = bot.get_guild(887675595419451396)
+
+       channel = guild.get_channel(1012501861036740669)
+
+       await channel.send("<@365714383793422338> Va dormir espèce de fils de flûte.")
 
 @tasks.loop(seconds=3)
 async def mob_attack():
+
     areas = []
     for filename in os.listdir('./database/areas'):
         if filename.endswith('.yml'):
@@ -179,12 +194,14 @@ async def status(ctx):
     embed.add_field(name="Stats", value=f"""
 **HP:**    {character.hp}/{character.max_hp}
 {endurance_bar(character)}
+
 **ATTACK:**   {character.adb}
 **DEFENSE:**   {character.defense}
 **MANA:**  {character.mana}
 **LEVEL:** {character.level}
 **XP:**    {character.xp}/{character.xp+xp_needed}
 {xp_bar(character)}
+
 **AREA:** {character.area_id}
     """, inline=True)
 
@@ -340,8 +357,6 @@ class FightView(discord.ui.View): # Create a class called MyView that subclasses
 
     #     await interaction.response.send_message(f"Vous avez fait {damage} dégats !", ephemeral=True)
 
-
-
 @bot.slash_command(name="hunt", help="Look for an enemy to fight.")
 @commands.cooldown(1,15)
 async def hunt(ctx):
@@ -475,7 +490,7 @@ async def flee(ctx):
         await ctx.respond(f"{character.name} fuit {enemy.name} Avec sa vie intact, mais pas sa dignité. HP: {character.hp}/{character.max_hp}")
 
 @bot.slash_command(name="levelup", help="Advance to the next level. Specify a stat to increase (HP, ATTACK, DEFENSE).")
-@commands.cooldown(1,15)
+@commands.cooldown(1,1)
 async def levelup(ctx, 
     increase:Option(str, "increase", choices=['ATTACK', 'DEFENSE'], required=True)):
     character = load_character(ctx.author.id)

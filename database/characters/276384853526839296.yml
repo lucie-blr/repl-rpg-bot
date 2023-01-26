@@ -1,19 +1,19 @@
-adb: 12
+adb: 29
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
 defense: 1
-gold: 129
-hp: 11
+gold: 148
+hp: 304
 inventory: []
-level: 3
+level: 20
 mana: 0
-max_hp: 24
+max_hp: 381
 mode:
 - ADVENTURE
 name: Void
 skin: https://media.discordapp.net/attachments/919160541291888703/1065271808460329001/Illustration11_1.png
 user_id: 276384853526839296
-xp: 70
+xp: 99958805
