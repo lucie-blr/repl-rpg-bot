@@ -83,6 +83,9 @@ class Character(Actor):
 
         player[self.user_id] = 0
 
+        print(player)
+        print(enemy_dict)
+
         enemy_dict["battling"] = player
 
         area.entitys.pop(enemy, None)
@@ -160,7 +163,7 @@ class Character(Actor):
         return (enemy.xp, enemy.gold, ready)
 
     def ready_to_level_up(self):
-        if self.level == self.level_cap: # zero values if we've ready the level cap
+        if self.level == 100: # zero values if we've ready the level cap
             return (False, 0)
             
         xp_needed = 12+((self.level)+1)**3
