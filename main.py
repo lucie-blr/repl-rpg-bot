@@ -48,6 +48,27 @@ async def on_ready():
     print(f"{bot.user} has connected to Discord!")
     mob_attack.start()
     dodo.start()
+    auto_heal.start()
+
+@tasks.loop(seconds=10)
+async def auto_heal():
+    characters = []
+    for filename in os.listdir('./database/characters'):
+        if filename.endswith('.yml'):
+            characters.append(filename[:-4])
+    
+    for character_id in characters:
+        character = load_character(character_id)
+
+        if character.mode == GameMode.ADVENTURE:
+            
+            if character.hp < character.max_hp:
+            
+                character.hp += int(round(character.max_hp * (5/100)))
+                
+                if character.hp > character.max_hp:
+                    character.hp = character.max_hp
+                character.save_to_db()
 
 @tasks.loop(seconds=1200)
 async def dodo():
@@ -60,7 +81,7 @@ async def dodo():
 
        channel = guild.get_channel(1012501861036740669)
 
-       await channel.send("<@365714383793422338> Va dormir espèce de fils de flûte.")
+       await channel.send("<@365714383793422338> Va dormir espèce de fils de flûte (mais ça compte pas pour Clément).")
 
 @tasks.loop(seconds=3)
 async def mob_attack():
@@ -104,11 +125,10 @@ async def mob_attack():
 
                 character.save_to_db()
 
-                print(f"{enemy.name} damage {damage} to {character}.")
-
                 embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
                 embed.set_thumbnail(url=f"{enemy.skin}")
-                embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+                embed.add_field(name=f"Historique", value=f"{enemy.name} a fait {damage} dégâts à {character.name}", inline=False)
+                embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=False)
                 embed.add_field(name=f"{enemy.name} life", value=f"{endurance_bar(enemy)}", inline=True)
 
                 guild = bot.get_guild(enemy.battle_message[2])
@@ -116,8 +136,6 @@ async def mob_attack():
                 channel = guild.get_channel(enemy.battle_message[1])
 
                 message = await channel.fetch_message(enemy.battle_message[0])
-
-                await message.edit(embed=embed)
 
                 if killed:
                     enemy.battling.pop(key, None)
@@ -129,6 +147,12 @@ async def mob_attack():
                     area.save_to_db()
 
                     character.die()
+
+                    embed.add_field(name=f"Perdu !", value=f"{enemy.name} a tué {character.name}", inline=False)
+                
+                    await message.edit(embed=embed, view=None)
+                else:
+                    await message.edit(embed=embed)
 
 
 @bot.event
@@ -218,7 +242,7 @@ async def status(ctx):
     await ctx.respond(embed=embed) 
 
 class FightView(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
-    @discord.ui.button(label="Attack!", style=discord.ButtonStyle.primary, emoji="😎") # Create a button with the label "😎 Click me!" with color Blurple
+    @discord.ui.button(label="Attack!", style=discord.ButtonStyle.red, emoji="🗡️") # Create a button with the label "😎 Click me!" with color Blurple
     async def attack_callback(self, button, interaction):
         character = load_character(interaction.user.id)
         area = Area(character.area_id)
@@ -242,13 +266,12 @@ class FightView(discord.ui.View): # Create a class called MyView that subclasses
 
         embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
         embed.set_thumbnail(url=f"{enemy.skin}")
-        embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+        embed.add_field(name=f"Historique", value=f"{character.name} a fait {damage} dégâts à {enemy.name}", inline=False)
+        embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=False)
         
         if killed:
-            t = ""
-            for i in range(0, 10):
-                t +=":red_square:"
-            embed.add_field(name=f"{enemy.name} life", value=t, inline=True)
+            t = "<:emptybarleft:1068151816946204742><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarright:1068151820922388510>"
+            embed.add_field(name=f"{enemy.name} life", value=f"{t}", inline=True)
             xp, gold, ready_to_level_up = character.defeat(enemy)
             embed.add_field(name=f"{character.name} gagne !", value=f"Et gagne {gold} gold, {xp} XP !", inline=False)
         else:
@@ -267,7 +290,7 @@ class FightView(discord.ui.View): # Create a class called MyView that subclasses
         await interaction.response.send_message(f"Vous avez fait {damage} dégats !", ephemeral=True)
 
 
-    @discord.ui.button(label="Flee!", style=discord.ButtonStyle.primary, emoji="😎") # Create a button with the label "😎 Click me!" with color Blurple
+    @discord.ui.button(label="Flee!", style=discord.ButtonStyle.grey, emoji="🏃") # Create a button with the label "😎 Click me!" with color Blurple
     async def flee_callback(self, button, interaction):
 
         character = load_character(interaction.user.id)
@@ -396,7 +419,7 @@ async def hunt(ctx):
 
     embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
     embed.set_thumbnail(url=f"{enemy.skin}")
-    embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+    embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=False)
     embed.add_field(name=f"{enemy.name} life", value=f"{endurance_bar(enemy)}", inline=True)
 
     # Send reply

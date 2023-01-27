@@ -17,11 +17,7 @@ class Actor:
     def fight(self, other):
         attack = random.randint(self.attack[0], self.attack[1])
 
-        print(attack)
-
         damage = round(self.adb * (round(attack / 10) / 10))
-
-        print(damage)
         
         other.hp -= damage
 

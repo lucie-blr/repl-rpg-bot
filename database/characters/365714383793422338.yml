@@ -1,19 +1,19 @@
-adb: 14
+adb: 15
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
 defense: 1
-gold: 392
-hp: 592
+gold: 505
+hp: 45
 inventory: []
-level: 5
+level: 6
 mana: 0
-max_hp: 3600
+max_hp: 45
 mode:
 - ADVENTURE
 name: Aiden
 skin: https://media.discordapp.net/attachments/619262155685888000/1066784698250055780/Illustration79_2.png
 user_id: 365714383793422338
-xp: 145
+xp: 55

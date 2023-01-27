@@ -1,12 +1,12 @@
-adb: 13
+adb: 14
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
-defense: 2
+defense: 1
 gold: 275
-hp: 22
+hp: 36
 inventory: []
 level: 5
 mana: 0
