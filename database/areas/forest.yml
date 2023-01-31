@@ -9,16 +9,16 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1068502984486555748
+    - 1069915065853161532
     - 1064638646004760636
     - 887675595419451396
     battling:
-      365714383793422338: 12
+      375938257902501888: 17
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674821367.3154833
+    last_death: 1675158033.1447313
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
@@ -31,16 +31,16 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1068454550740148264
+    - 1069919641406808104
     - 1064638646004760636
     - 887675595419451396
     battling:
-      365714383793422338: 16
+      276384853526839296: 106
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674809820.582151
+    last_death: 1675159145.5434988
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
@@ -53,16 +53,16 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1068441420022685716
+    - 1069919765222653962
     - 1064638646004760636
     - 887675595419451396
     battling:
-      375938257902501888: 13
+      276384853526839296: 95
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1674806686.5952244
+    last_death: 1675159202.037093
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
@@ -75,16 +75,16 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1068279889964318770
+    - 1069920023184953404
     - 1064638646004760636
     - 887675595419451396
     battling:
-      375938257902501888: 21
+      276384853526839296: 84
     defense: 2
     enemy: boss_lone_wolf
     gold: 10
     hp: 20
-    last_death: 1674768177.3960354
+    last_death: 1675159224.2216275
     max_hp: 20
     min_level: 2
     name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es alpha"

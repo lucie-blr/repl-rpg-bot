@@ -1,19 +1,22 @@
-adb: 13
+adb: 14
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
 defense: 2
-gold: 289
-hp: 36
+gold: 501
+hp: 45
 inventory: []
-level: 5
-mana: 0
-max_hp: 36
+level: 6
+mana: 10
+max_hp: 45
+max_mana: 10
 mode:
 - ADVENTURE
 name: "Om\xE9a-Zesta"
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
+spells:
+- firebolt
 user_id: 630278968297390090
-xp: 22
+xp: 46

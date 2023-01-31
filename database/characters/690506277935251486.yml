@@ -5,7 +5,7 @@ attack:
 - 90
 battling: null
 defense: 1
-gold: 588
+gold: 687
 hp: 45
 inventory: []
 level: 6
@@ -14,9 +14,9 @@ max_hp: 45
 max_mana: 10
 mode:
 - ADVENTURE
-name: Aiden
-skin: https://media.discordapp.net/attachments/619262155685888000/1066784698250055780/Illustration79_2.png
+name: Vehme
+skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 spells:
 - firebolt
-user_id: 365714383793422338
-xp: 163
+user_id: 690506277935251486
+xp: 337

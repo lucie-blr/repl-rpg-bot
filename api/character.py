@@ -6,15 +6,17 @@ from api.enemy import Enemy
 from api.actor import Actor
 from api.helper_function import *
 from api.area import *
+from api.spell import *
 
 class Character(Actor):
 
     level_cap = 10
 
     def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, 
-    gold, inventory, mode, battling, user_id, area_id,skin, adb):
+    gold, inventory, mode, battling, user_id, area_id,skin, adb, spells, max_mana):
         super().__init__(name, hp, max_hp, attack, defense, xp, gold, adb)
         self.mana = mana
+        self.max_mana = max_mana
         self.level = level
         
         self.inventory = inventory 
@@ -28,6 +30,8 @@ class Character(Actor):
         self.area_id = area_id
 
         self.skin = skin
+        
+        self.spells = spells
 
     def save_to_db(self):
 
@@ -97,14 +101,16 @@ class Character(Actor):
 
         return enemy
 
-    def fight(self, enemy):
+    def fight(self, enemy, attack = None):
         area = Area(self.area_id)
 
         enemy_dict = area.battling.get(self.battling)
 
         enemy = Enemy(**enemy_dict)
 
-        outcome, killed = super().fight(enemy)
+        print(attack)
+
+        outcome, killed, attack = super().fight(enemy, attack)
 
         enemy.battling[self.user_id] += outcome
         
@@ -115,7 +121,7 @@ class Character(Actor):
 
         area.save_to_db()
         
-        return outcome, killed
+        return outcome, killed, attack
 
     def flee(self, enemy):
         if random.randint(0,1+self.defense): # flee unscathed
@@ -125,24 +131,26 @@ class Character(Actor):
             damage = round(enemy.adb * (round(attack / 10) / 10))
             self.hp -= damage
 
-        # Exit battle mode
-        self.battling = None
-        self.mode = GameMode.ADVENTURE
-
+        
         area = Area(self.area_id)
 
         enemy.battling.pop(self.user_id, None)
+        print(enemy.battling)
                     
         area.rehydrate()
 
-        area.save_enemy(enemy, self.enemy_id)
+        area.save_enemy(enemy, self.battling)
+        
+        # Exit battle mode
+        self.battling = None
+        self.mode = GameMode.ADVENTURE
 
         area.save_to_db()
 
         # Save to DB after state change
         self.save_to_db()
 
-        return (damage, self.hp <= 0) #(damage, killed)
+        return (damage, self.hp <= 0, None) #(damage, killed)
 
     def defeat(self, enemy):
         if self.level < self.level_cap: # no more XP after hitting level cap
@@ -191,3 +199,10 @@ class Character(Actor):
         self.hp = 0
         self.mode = GameMode.DEAD
         self.save_to_db()
+
+    def get_spells(self):
+        dic = {}
+        for spell in self.spells:
+            dic[spell] = Spell(spell)
+        
+        return dic

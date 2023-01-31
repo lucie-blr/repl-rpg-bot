@@ -11,9 +11,12 @@ inventory: []
 level: 2
 mana: 0
 max_hp: 21
+max_mana: 10
 mode:
 - DEAD
 name: Xoni
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 user_id: 584312780140707861
 xp: 4
+spells:
+- firebolt

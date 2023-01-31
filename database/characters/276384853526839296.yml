@@ -1,19 +1,22 @@
-adb: 29
+adb: 109
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
 defense: 1
-gold: 212
-hp: 381
+gold: 329
+hp: 9624
 inventory: []
-level: 20
-mana: 0
-max_hp: 381
+level: 99
+mana: 10
+max_hp: 9624
+max_mana: 10
 mode:
 - ADVENTURE
 name: Void
 skin: https://media.discordapp.net/attachments/919160541291888703/1065271808460329001/Illustration11_1.png
+spells:
+- firebolt
 user_id: 276384853526839296
-xp: 99958805
+xp: 100

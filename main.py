@@ -9,6 +9,7 @@ from api.enemy import *
 from api.area import *
 from api.helper_function import *
 from api.gamemode import *
+from api.spell import *
 
 import yaml
 
@@ -56,19 +57,52 @@ async def auto_heal():
     for filename in os.listdir('./database/characters'):
         if filename.endswith('.yml'):
             characters.append(filename[:-4])
-    
+
     for character_id in characters:
         character = load_character(character_id)
 
+        ready, xp_needed = character.ready_to_level_up()
+
+        if ready:
+
+            area = Area(character.area_id)
+
+            success, new_level = character.level_up("adb")
+
+            guild = bot.get_guild(887675595419451396)
+
+            channel = guild.get_channel(area.channel_id)
+
+            if success:
+                await channel.send(f"{character.name} est monté au niveau {new_level}, gagnant 1 adb.")
+            else:
+                await channel.send(f"{character.name} n'a pas réussi à monter de niveau.")
+
+        if character.mode == GameMode.BATTLE:
+            if character.mana < character.max_mana:
+                character.mana = int(round(character.max_mana * (20/100)))
+
+                if character.mana > character.max_mana:
+                    character.mana += int(round(character.max_mana * (5/100)))
+
+                character.save_to_db()
+
         if character.mode == GameMode.ADVENTURE:
-            
+
+            if character.mana < character.max_mana:
+                character.mana += int(round(character.max_mana * (20/100)))
+
+                if character.mana > character.max_mana:
+                    character.mana = character.max_mana
+
             if character.hp < character.max_hp:
-            
+
                 character.hp += int(round(character.max_hp * (5/100)))
-                
+
                 if character.hp > character.max_hp:
                     character.hp = character.max_hp
-                character.save_to_db()
+
+            character.save_to_db()
 
 @tasks.loop(seconds=1200)
 async def dodo():
@@ -90,7 +124,7 @@ async def mob_attack():
     for filename in os.listdir('./database/areas'):
         if filename.endswith('.yml'):
             areas.append(filename[:-4])
-        
+
     for area_id in areas:
         area = Area(area_id)
 
@@ -103,7 +137,7 @@ async def mob_attack():
                 battling_dict = enemy.battling
 
                 l = list(battling_dict.values())
-                
+
                 l.sort(reverse=True)
 
                 if len(list(battling_dict.keys())) <= 0:
@@ -116,20 +150,21 @@ async def mob_attack():
                     area.save_to_db()
 
                     continue
-                
+
                 key = list(filter(lambda x: battling_dict[x] == l[0], battling_dict))[0]
 
                 character = load_character(key)
 
-                damage, killed = enemy.fight(character)
+                damage, killed, _ = enemy.fight(character)
 
                 character.save_to_db()
 
                 embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
                 embed.set_thumbnail(url=f"{enemy.skin}")
                 embed.add_field(name=f"Historique", value=f"{enemy.name} a fait {damage} dégâts à {character.name}", inline=False)
-                embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=False)
-                embed.add_field(name=f"{enemy.name} life", value=f"{endurance_bar(enemy)}", inline=True)
+                embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
+{mana_bar(character)}""", inline=False)
+                embed.add_field(name=f"{enemy.name}", value=f"{endurance_bar(enemy)}", inline=True)
 
                 guild = bot.get_guild(enemy.battle_message[2])
 
@@ -139,7 +174,7 @@ async def mob_attack():
 
                 if killed:
                     enemy.battling.pop(key, None)
-                    
+
                     area.rehydrate()
 
                     area.save_enemy(enemy, enemy_id)
@@ -149,7 +184,7 @@ async def mob_attack():
                     character.die()
 
                     embed.add_field(name=f"Perdu !", value=f"{enemy.name} a tué {character.name}", inline=False)
-                
+
                     await message.edit(embed=embed, view=None)
                 else:
                     await message.edit(embed=embed)
@@ -162,7 +197,7 @@ async def on_application_command_error(ctx: discord.ApplicationContext, error: d
     else:
         raise error  # Here we raise other errors to ensure they aren't ignored
 
-cmd = SlashCommandGroup("rpg", "Commands for server management!")  
+cmd = SlashCommandGroup("rpg", "Commands for server management!")
 
 # Commands
 @bot.slash_command(name="create", help="Create a character.")
@@ -188,6 +223,8 @@ async def create(ctx, character_name=None):
             "attack": [30,90],
             "defense": 1,
             "mana": 0,
+            "max_mana": 10,
+            "spells": ["firebolt"],
             "level": 1,
             "xp": 0,
             "gold": 0,
@@ -221,7 +258,9 @@ async def status(ctx):
 
 **ATTACK:**   {character.adb}
 **DEFENSE:**   {character.defense}
-**MANA:**  {character.mana}
+**MANA:**  {character.mana}/{character.max_mana}
+{mana_bar(character)}
+
 **LEVEL:** {character.level}
 **XP:**    {character.xp}/{character.xp+xp_needed}
 {xp_bar(character)}
@@ -233,13 +272,13 @@ async def status(ctx):
     inventory_text = f"Gold: {character.gold}\n"
     if character.inventory:
         inventory_text += "\n".join(character.inventory)
-    
+
     embed.add_field(name="Inventory", value=inventory_text, inline=True)
 
     if character.skin != None:
         embed.set_thumbnail(url=character.skin)
 
-    await ctx.respond(embed=embed) 
+    await ctx.respond(embed=embed)
 
 class FightView(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
     @discord.ui.button(label="Attack!", style=discord.ButtonStyle.red, emoji="🗡️") # Create a button with the label "😎 Click me!" with color Blurple
@@ -262,32 +301,45 @@ class FightView(discord.ui.View): # Create a class called MyView that subclasses
         enemy_dict = area.battling.get(enemy_id)
         enemy = Enemy(**enemy_dict)
 
-        damage, killed = character.fight(enemy)
+        damage, killed, _ = character.fight(enemy=enemy)
 
         embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
         embed.set_thumbnail(url=f"{enemy.skin}")
-        embed.add_field(name=f"Historique", value=f"{character.name} a fait {damage} dégâts à {enemy.name}", inline=False)
-        embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=False)
+        embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
+{mana_bar(character)}""", inline=False)
         
         if killed:
             t = "<:emptybarleft:1068151816946204742><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarright:1068151820922388510>"
-            embed.add_field(name=f"{enemy.name} life", value=f"{t}", inline=True)
+            embed.add_field(name=f"{enemy.name}", value=f"{t}", inline=True)
             xp, gold, ready_to_level_up = character.defeat(enemy)
             embed.add_field(name=f"{character.name} gagne !", value=f"Et gagne {gold} gold, {xp} XP !", inline=False)
         else:
             embed.add_field(name=f"{enemy.name} life", value=f"{endurance_bar(enemy)}", inline=True)
 
-        guild = bot.get_guild(enemy.battle_message[2])
+        message = interaction.response
 
-        channel = guild.get_channel(enemy.battle_message[1])
-
-        message = await channel.fetch_message(enemy.battle_message[0])
         if killed:
-            await message.edit(embed=embed, view=None)
+            await message.edit_message(embed=embed, view=None)
         else:
-            await message.edit(embed=embed, view=FightView())
+            
+            spells = character.spells
 
-        await interaction.response.send_message(f"Vous avez fait {damage} dégats !", ephemeral=True)
+            options = []
+
+            for spell_id in spells:
+                spell = Spell(spell_id)
+
+                options.append(discord.SelectOption(label=spell.name, value=spell_id))
+
+            select = discord.ui.Select(options = options, min_values=1, max_values=1)
+
+            select.callback = spell_callback
+
+            view = FightView()
+
+            view.add_item(item=select)
+
+            await message.edit_message(embed=embed, view=view)
 
 
     @discord.ui.button(label="Flee!", style=discord.ButtonStyle.grey, emoji="🏃") # Create a button with the label "😎 Click me!" with color Blurple
@@ -313,75 +365,97 @@ class FightView(discord.ui.View): # Create a class called MyView that subclasses
         area.rehydrate()
         enemy_dict = area.battling.get(enemy_id)
         enemy = Enemy(**enemy_dict)
-        damage, killed = character.flee(enemy)
+        damage, killed, _ = character.flee(enemy)
 
         embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
         embed.set_thumbnail(url=f"{enemy.skin}")
-        
 
         if killed:
             character.die()
-            embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+            embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
+{mana_bar(character)}""", inline=False)
             embed.add_field(name= "Fuite", value=f"{character.name} est mort en essayant de fuir {enemy.name}, et n'est plus. Rest in peace, brave aventurier.")
         elif damage:
-            embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+            embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
+{mana_bar(character)}""", inline=False)
             embed.add_field(name= "Fuite", value=f"{character.name} fuit {enemy.name}, et prend {damage} dégâts. HP: {character.hp}/{character.max_hp}")
         else:
-            embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
+            embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
+{mana_bar(character)}""", inline=False)
             embed.add_field(name= "Fuite", value=f"{character.name} fuit {enemy.name} Avec sa vie intact, mais pas sa dignité. HP: {character.hp}/{character.max_hp}")
 
-        await interaction.response.edit(embed) # Send a message when the button is clicked
+        await interaction.response.edit_message(embed=embed) # Send a message when the button is clicked
 
-    # @discord.ui.button(label="Spell!", style=discord.ButtonStyle.primary, emoji="😎")
-    # async def spell_callback(self,button,interaction):
-    #     character = load_character(interaction.user.id)
-    #     area = Area(character.area_id)
 
-    #     if interaction.channel.id != area.channel_id:
-    #         return
+async def spell_callback(interaction):
+    channel = interaction.channel
 
-    #     if character.mode == GameMode.DEAD:
-    #         return
+    select = interaction.data
 
-    #     if character.mode != GameMode.BATTLE:
-    #         return
+    values = select.get("values")
 
-    #     # Simulate battle
-    #     enemy_id = character.battling
-    #     area.rehydrate()
-    #     enemy_dict = area.battling.get(enemy_id)
-    #     enemy = Enemy(**enemy_dict)
+    spell = Spell(values[0])
 
-    #     damage, killed = character.fight(enemy)
+    user = interaction.user
 
-    #     embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
-    #     embed.set_thumbnail(url=f"{enemy.skin}")
-    #     embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=True)
-        
-    #     if killed:
-    #         t = ""
-    #         for i in range(0, 10):
-    #             t +=":red_square:"
-    #         embed.add_field(name=f"{enemy.name} life", value=t, inline=True)
-    #         xp, gold, ready_to_level_up = character.defeat(enemy)
-    #         embed.add_field(name=f"{character.name} gagne !", value=f"Et gagne {gold} gold, {xp} XP !", inline=False)
-    #     else:
-    #         embed.add_field(name=f"{enemy.name} life", value=f"{endurance_bar(enemy)}", inline=True)
+    character = load_character(user.id)
 
-    #     guild = bot.get_guild(enemy.battle_message[2])
+    area = Area(character.area_id)
 
-    #     channel = guild.get_channel(enemy.battle_message[1])
+    enemy_dict = area.battling.get(character.battling)
 
-    #     message = await channel.fetch_message(enemy.battle_message[0])
-    #     if killed:
-    #         await message.edit(embed=embed, view=None)
-    #     else:
-    #         await message.edit(embed=embed, view=FightView())
+    enemy = Enemy(**enemy_dict)
 
-    #     await interaction.response.send_message(f"Vous avez fait {damage} dégats !", ephemeral=True)
+    embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
+    embed.set_thumbnail(url=f"{enemy.skin}")
+    
+
+    damage, killed = 0, False
+    if character.mana >= spell.mana_cost:
+        damage, killed, spell = character.fight(enemy=enemy, attack=spell)
+        character.mana -= spell.mana_cost
+        embed.add_field(name=f"Historique", value=f"{character.name} a fait {damage} dégâts à {enemy.name} avec {spell.name}", inline=False)
+    else:
+        embed.add_field(name=f"Historique", value=f"{character.name} tente de lancer {spell.name} mais n'y arrive pas !", inline=False)
+    
+    character.save_to_db()
+    embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
+{mana_bar(character)}""", inline=False)
+    if killed:
+        t = "<:emptybarleft:1068151816946204742><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarright:1068151820922388510>"
+        embed.add_field(name=f"{enemy.name}", value=f"{t}", inline=True)
+        xp, gold, ready_to_level_up = character.defeat(enemy)
+        embed.add_field(name=f"{character.name} gagne !", value=f"Et gagne {gold} gold, {xp} XP !", inline=False)
+    else:
+        embed.add_field(name=f"{enemy.name}", value=f"{endurance_bar(enemy)}", inline=True)
+
+    message = interaction.response
+
+    if killed:
+        await message.edit_message(embed=embed, view=None)
+    else:
+        spells = character.spells
+
+        options = []
+
+        for spell_id in spells:
+            spell = Spell(spell_id)
+
+            options.append(discord.SelectOption(label=spell.name, value=spell_id))
+
+        select = discord.ui.Select(options = options, min_values=1, max_values=1)
+
+        select.callback = spell_callback
+
+        view = FightView()
+
+        view.add_item(item=select)
+
+        await message.edit_message(embed=embed, view=view)
+
 
 @bot.slash_command(name="hunt", help="Look for an enemy to fight.")
-@commands.cooldown(1,15)
+@commands.cooldown(1,1)
 async def hunt(ctx):
     character = load_character(ctx.author.id)
     area = Area(character.area_id)
@@ -408,7 +482,7 @@ async def hunt(ctx):
     if enemy_id == None:
         await ctx.respond("Aucun ennemi trouvé dans la zone.")
         return
-    
+
     if not enemy_id in area.battling.keys():
         await ctx.respond(f"{enemy_id} n'est pas dans la zone !")
         return
@@ -419,11 +493,29 @@ async def hunt(ctx):
 
     embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
     embed.set_thumbnail(url=f"{enemy.skin}")
-    embed.add_field(name=f"{character.name} life", value=f"{endurance_bar(character)}", inline=False)
-    embed.add_field(name=f"{enemy.name} life", value=f"{endurance_bar(enemy)}", inline=True)
+    embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
+{mana_bar(character)}""", inline=False)
+    embed.add_field(name=f"{enemy.name}", value=f"{endurance_bar(enemy)}", inline=True)
+
+    spells = character.spells
+
+    options = []
+
+    for spell_id in spells:
+        spell = Spell(spell_id)
+
+        options.append(discord.SelectOption(label=spell.name, value=spell_id))
+    
+    select = discord.ui.Select(options = options, min_values=1, max_values=1)
+
+    select.callback = spell_callback
+
+    view = FightView()
+    
+    view.add_item(item=select)
 
     # Send reply
-    message = await ctx.send(embed=embed, view=FightView())
+    message = await ctx.send(embed=embed, view=view)
 
     await ctx.respond("You enter in fight !")
 
@@ -432,7 +524,7 @@ async def hunt(ctx):
     area.save_enemy(enemy, enemy_id)
 
     area.save_to_db()
-    
+
 
 #@bot.slash_command(name="fight", help="Fight the current enemy.")
 #@commands.cooldown(1,2)
@@ -443,7 +535,7 @@ async def hunt(ctx):
 #    if ctx.channel.id != area.channel_id:
 #        await ctx.respond("Vous ne pouvez utiliser cette commande que quand des channels de jeu.!")
 #        return
-#    
+#
 #    if character.mode == GameMode.DEAD:
 #        await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
 #        return
@@ -451,7 +543,7 @@ async def hunt(ctx):
 #    if character.mode != GameMode.BATTLE:
 #        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat!")
 #        return
-#        
+#
 #    # Simulate battle
 #    enemy_id = character.battling
 #    area.rehydrate()
@@ -468,14 +560,14 @@ async def hunt(ctx):
 #        # End battle in victory if enemy killed
 #    if killed:
 #        xp, gold, ready_to_level_up = character.defeat(enemy)
-#        
+#
 #        await ctx.respond(f"{character.name} a vaincu le {enemy.name}, et gagne {xp} XP et {gold} GOLD. HP: {character.hp}/{character.max_hp}.")
-#        
+#
 #        if ready_to_level_up:
 #            await ctx.respond(f"{character.name} a gagné assez d'XP pour monter au niveau {character.level+1}. Entrez `/levelup` avec la stat (ATTACK, DEFENSE) que vous voudriez amméliorer. e.g. `/levelup defense` ou `/levelup attack`.")
-#            
+#
 #        return
-#    
+#
 #        # No deaths, battle continues
 #    await ctx.respond(f"La bataille fait rage ! Est-ce que vous `/fight` ou `/flee`?")
 
@@ -492,7 +584,7 @@ async def flee(ctx):
     if character.mode == GameMode.DEAD:
         await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
         return
-    
+
     if character.mode != GameMode.BATTLE:
         await ctx.respond("Vous ne pouvez pas appeler cette commande en combat!")
         return
@@ -514,7 +606,7 @@ async def flee(ctx):
 
 @bot.slash_command(name="levelup", help="Advance to the next level. Specify a stat to increase (HP, ATTACK, DEFENSE).")
 @commands.cooldown(1,1)
-async def levelup(ctx, 
+async def levelup(ctx,
     increase:Option(str, "increase", choices=['ATTACK', 'DEFENSE'], required=True)):
     character = load_character(ctx.author.id)
 
@@ -530,7 +622,7 @@ async def levelup(ctx,
     if not ready:
         await ctx.respond(f"Vous avez besoin de {xp_needed} pour monter au niveau {character.level+1}")
         return
-        
+
     if not increase:
         await ctx.respond("Veuillez spécifier une statistique à améliorer. (ATTACK, DEFENSE)")
         return
@@ -552,15 +644,15 @@ async def levelup(ctx,
 @bot.slash_command(name="die", help="Destroy current character.")
 async def die(ctx):
     character = load_character(ctx.author.id)
-    
+
     character.die()
-    
+
     await ctx.respond(f"Le personnage {character.name} n'est plus. Créez-en un nouveau avec `/create`.")
 
 @bot.slash_command(name="reset", help="[DEV] Destroy and recreate current character.")
 async def reset(ctx):
     user_id = str(ctx.author.id)
-    
+
     if user_id in db["characters"].keys():
         del db["characters"][user_id]
 
@@ -570,11 +662,11 @@ async def reset(ctx):
 @bot.slash_command(name="heal", help="Heal character")
 async def heal(ctx):
     character = load_character(ctx.author.id)
-    
+
     if character.mode == GameMode.BATTLE:
         await ctx.respond("Vous ne pouvez pas appeler cette commande en combat.")
         return
-    
+
     character.hp = character.max_hp
 
     if character.mode == GameMode.DEAD:
@@ -617,8 +709,6 @@ async def area_callback(interaction):
 
     await new_channel.send(f"Bienvenue {character.name} dans {area.name} !")
 
-
-
 @bot.slash_command(name="move", help="Change the area of the character")
 async def move(ctx):
     character = load_character(ctx.author.id)
@@ -641,13 +731,13 @@ async def move(ctx):
         new_area = Area(area_id)
 
         options.append(discord.SelectOption(label=new_area.name, value=area_id))
-    
+
     select = discord.ui.Select(options = options, min_values=1, max_values=1)
 
     select.callback = area_callback
 
     view = discord.ui.View()
-    
+
     view.add_item(item=select)
 
     await ctx.respond("Où voulez-vous aller ?", view = view, ephemeral=True)
