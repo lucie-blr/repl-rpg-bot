@@ -4,8 +4,10 @@ attack:
 - 30
 - 90
 battling: null
+defeated:
+  lone_wolf: 2
 defense: 1
-gold: 329
+gold: 3296
 hp: 9624
 inventory: []
 level: 99

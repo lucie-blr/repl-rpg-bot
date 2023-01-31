@@ -13,7 +13,7 @@ class Character(Actor):
     level_cap = 10
 
     def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, 
-    gold, inventory, mode, battling, user_id, area_id,skin, adb, spells, max_mana):
+    gold, inventory, mode, battling, user_id, area_id,skin, adb, spells, max_mana, defeated):
         super().__init__(name, hp, max_hp, attack, defense, xp, gold, adb)
         self.mana = mana
         self.max_mana = max_mana
@@ -32,6 +32,8 @@ class Character(Actor):
         self.skin = skin
         
         self.spells = spells
+        
+        self.defeated = defeated
 
     def save_to_db(self):
 
@@ -157,6 +159,11 @@ class Character(Actor):
             self.xp += enemy.xp
 
         self.gold += enemy.gold # loot enemy
+
+        try:
+            self.defeated[enemy.enemy] += 1
+        except KeyError:
+            self.defeated[enemy.enemy] = 1
 
         # Exit battle mode
         self.battling = None

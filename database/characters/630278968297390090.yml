@@ -4,6 +4,7 @@ attack:
 - 30
 - 90
 battling: null
+defeated: {}
 defense: 2
 gold: 501
 hp: 45

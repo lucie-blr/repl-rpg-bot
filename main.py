@@ -744,5 +744,17 @@ async def move(ctx):
 
     character.save_to_db()
 
+@bot.slash_command(name="statistics", help="Get how much mobs you have killed.")
+async def statistics(ctx):
+    character = load_character(ctx.author.id)
+
+    t = ""
+
+    for enemy_type in character.defeated:
+        t += f"\n{enemy_type} : {character.defeated[enemy_type]}"
+    
+    embed=discord.Embed(title="Stats", description="Nombre de monstres que vous avez tué :", color=0xff0000)
+    embed.add_field(name="", value=t, inline=False)
+    await ctx.respond(embed=embed)
 
 bot.run(DISCORD_TOKEN)
