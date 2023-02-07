@@ -1,5 +1,6 @@
 import discord.channel
 from api.gamemode import AreaType
+from api.enemy import *
 import yaml, time
 from copy import deepcopy
 
@@ -11,7 +12,15 @@ class Area:
         self.description = db.get("description")
         self.channel_id = db.get("channel_id")
         self.entitys = db.get("entitys")
+        d = {}
+        for entity in self.entitys.keys():
+            d[entity] = Enemy(**self.entitys.get(entity))
+        self.entitys = d
+        d = {}
         self.battling = db.get("battling")
+        for entity in self.battling.keys():
+            d[entity] = Enemy(**self.battling.get(entity))
+        self.battling = d
         self.type = AreaType[db.get("type")]
         self.nearby = db.get("nearby")
         self.area = channel
@@ -33,6 +42,20 @@ class Area:
         area_dict = deepcopy(vars(self))
 
         area_dict['type'] = self.type.name
+
+        d = {}
+        for entity in self.entitys.keys():
+            e = self.entitys.get(entity)
+            d[entity] = deepcopy(vars(e))
+        area_dict['entitys'] = d
+
+        d = {}
+        for enemy in self.battling.keys():
+            print(self.battling.get(enemy).battling)
+            e = self.battling.get(enemy)
+            d[enemy] = deepcopy(vars(e))
+            print(d)
+        area_dict['battling'] = d
 
         db = area_dict
 

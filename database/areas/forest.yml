@@ -9,16 +9,16 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1069929362058649651
+    - 1072433887973744712
     - 1064638646004760636
     - 887675595419451396
     battling:
-      365714383793422338: 12
+      365714383793422338: 19
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1675161439.594304
+    last_death: 1675758567.8022652
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
@@ -31,16 +31,16 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1069929561720102912
+    - 1072422639030775848
     - 1064638646004760636
     - 887675595419451396
     battling:
-      365714383793422338: 16
+      375938257902501888: 11
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1675161489.9391024
+    last_death: 1675755882.9186137
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
@@ -53,16 +53,38 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1069928924701790228
+    - 1072253204819091467
     - 1064638646004760636
     - 887675595419451396
     battling:
-      365714383793422338: 14
+      690506277935251486: 10
     defense: 1
     enemy: lone_wolf
     gold: 3
     hp: 10
-    last_death: 1675161336.5137644
+    last_death: 1675715488.0472913
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
+    respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
+    xp: 3
+  4:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    battle_message:
+    - 1072422587939954768
+    - 1064638646004760636
+    - 887675595419451396
+    battling:
+      375938257902501888: 12
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1675755872.4389355
     max_hp: 10
     min_level: 2
     name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
@@ -75,22 +97,106 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1069929688723640380
+    - 1072531158430142464
     - 1064638646004760636
     - 887675595419451396
-    battling:
-      365714383793422338: 29
+    battling: {}
     defense: 2
     enemy: boss_lone_wolf
     gold: 10
-    hp: 20
-    last_death: 1675161528.2613814
+    hp: 0
+    last_death: 1675711512.5770626
     max_hp: 20
     min_level: 2
     name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es alpha"
     respawn: 60
     skin: https://media.discordapp.net/attachments/619262155685888000/1067886429151178812/Illustration80_1.png?width=630&height=630
     xp: 15
+  6:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    battle_message:
+    - 1072532306830565406
+    - 1064638646004760636
+    - 887675595419451396
+    battling: {}
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 0
+    last_death: 1675755906.8118958
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
+    respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
+    xp: 3
+  8:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    battle_message:
+    - 1072530113352179762
+    - 1064638646004760636
+    - 887675595419451396
+    battling: {}
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 0
+    last_death: 1675758605.83433
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
+    respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
+    xp: 3
+  9:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    battle_message:
+    - 1072434111500779571
+    - 1064638646004760636
+    - 887675595419451396
+    battling:
+      365714383793422338: 12
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 10
+    last_death: 1675758620.419742
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
+    respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
+    xp: 3
+  10:
+    adb: 5
+    attack:
+    - 70
+    - 100
+    battle_message:
+    - 1072532213503115427
+    - 1064638646004760636
+    - 887675595419451396
+    battling: {}
+    defense: 1
+    enemy: lone_wolf
+    gold: 3
+    hp: 0
+    last_death: 1675711524.5430882
+    max_hp: 10
+    min_level: 2
+    name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
+    respawn: 15
+    skin: https://media.discordapp.net/attachments/619262155685888000/1064628708612255834/Illustration80.png?width=630&height=630
+    xp: 3
 name: forest
 nearby:
 - river

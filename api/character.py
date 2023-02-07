@@ -60,23 +60,7 @@ class Character(Actor):
 
         entitys = area.entitys
 
-        if area.type == AreaType.PVE_AREA:
-            for entity in area.entitys.keys():
-
-                entity_dict = area.entitys.get(entity)
-
-                print(time.time() - entity_dict["last_death"])
-                print(entity_dict["respawn"])
-
-                if time.time() - entity_dict["last_death"] >= entity_dict["respawn"]:
-
-                    enemys.append(entity)
-
-        if len(enemys) <= 0:
-            return None
-
-        enemy = random.choice(enemys)
-
+        
         # Enter battle mode
         self.mode = GameMode.BATTLE
         self.battling = enemy
@@ -106,22 +90,11 @@ class Character(Actor):
     def fight(self, enemy, attack = None):
         area = Area(self.area_id)
 
-        enemy_dict = area.battling.get(self.battling)
-
-        enemy = Enemy(**enemy_dict)
-
         print(attack)
-
+        print(enemy)
         outcome, killed, attack = super().fight(enemy, attack)
 
         enemy.battling[self.user_id] += outcome
-        
-        # Save changes to DB after state change
-        self.save_to_db()
-
-        area.save_enemy(enemy, self.battling)
-
-        area.save_to_db()
         
         return outcome, killed, attack
 

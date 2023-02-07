@@ -5,10 +5,10 @@ attack:
 - 90
 battling: null
 defeated:
-  boss_lone_wolf: 1
-  lone_wolf: 2
+  boss_lone_wolf: 8
+  lone_wolf: 72
 defense: 1
-gold: 703
+gold: 983
 hp: 56
 inventory: []
 level: 7
@@ -22,4 +22,4 @@ skin: https://media.discordapp.net/attachments/619262155685888000/10646182591581
 spells:
 - firebolt
 user_id: 690506277935251486
-xp: 3
+xp: 318

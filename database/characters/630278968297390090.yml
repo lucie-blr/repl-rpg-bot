@@ -1,17 +1,19 @@
-adb: 14
+adb: 16
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
-defeated: {}
+defeated:
+  boss_lone_wolf: 17
+  lone_wolf: 193
 defense: 2
-gold: 501
-hp: 45
+gold: 1250
+hp: 69
 inventory: []
-level: 6
+level: 8
 mana: 10
-max_hp: 45
+max_hp: 69
 max_mana: 10
 mode:
 - ADVENTURE
@@ -20,4 +22,4 @@ skin: https://media.discordapp.net/attachments/619262155685888000/10646182591581
 spells:
 - firebolt
 user_id: 630278968297390090
-xp: 46
+xp: 1

@@ -3,3 +3,4 @@ name: Firebolt
 mana_cost: 5
 effects:
   instant_damage: 8
+skin: null

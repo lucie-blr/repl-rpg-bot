@@ -10,14 +10,11 @@ from api.area import *
 from api.helper_function import *
 from api.gamemode import *
 from api.spell import *
+from api.game import *
 
 import yaml
 
 # Helper functions
-def load_character(user_id):
-    character_dict = yaml.safe_load(open(f'./database/characters/{user_id}.yml'))
-
-    return Character(**character_dict)
 
 MODE_COLOR = {
     GameMode.BATTLE: 0xDC143C,
@@ -42,30 +39,88 @@ def status_embed(ctx, character):
 
 DISCORD_TOKEN = (yaml.safe_load(open('./config.yml'))).get("token")
 
-bot = commands.Bot(command_prefix="!")
+class Bot(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix="!")
+        self.game = Game()
+
+bot = Bot()
 
 @bot.event
 async def on_ready():
     print(f"{bot.user} has connected to Discord!")
+
+    bot.game.loadDb()
+
+    #bot.game.save_to_db()
+
+    print(bot.game.areas.get("forest").entitys)
+    
     mob_attack.start()
     dodo.start()
     auto_heal.start()
+    classement.start()
+
+@tasks.loop(seconds=60)
+async def classement():
+    classement = yaml.safe_load(open('./classement.yml'))
+
+    for message in classement:
+        message = classement.get(message)
+        guild = bot.get_guild(887675595419451396)
+
+        characters = os.listdir('./database/characters')
+
+        channel = guild.get_channel(message[0])
+
+        message = await channel.fetch_message(message[1])
+
+        embed=discord.Embed(title="Classement", description="Classement du nombre de loups tués.", color=0xff0000)
+
+        d = {}
+
+        for character in bot.game.characters.characters.values():
+
+            defeated = character.defeated
+
+            v = 0
+            
+            try:
+                v += defeated.get("lone_wolf")
+            except:
+                v = v
+            try:
+                v += defeated.get("boss_lone_wolf")
+            except:
+                v = v
+
+            d[character.name] = v
+
+
+        l = list(d.values())
+
+        l.sort(reverse=True)
+
+        for i in range(len(l)):
+            key = list(filter(lambda x: d[x] == l[i], d))[0]    
+                
+            embed.add_field(name=f"{key}", value=f"{(d[key])}")
+
+            d.pop(key, None)
+        
+        await message.edit("", embed=embed)
 
 @tasks.loop(seconds=10)
 async def auto_heal():
-    characters = []
-    for filename in os.listdir('./database/characters'):
-        if filename.endswith('.yml'):
-            characters.append(filename[:-4])
+    characters = bot.game.characters.characters
 
-    for character_id in characters:
-        character = load_character(character_id)
+    for character in characters.values():
 
         ready, xp_needed = character.ready_to_level_up()
 
         if ready:
 
-            area = Area(character.area_id)
+            area = bot.game.area.getArea(character.area_id)
 
             success, new_level = character.level_up("adb")
 
@@ -80,10 +135,7 @@ async def auto_heal():
 
         if character.mode == GameMode.BATTLE:
             if character.mana < character.max_mana:
-                character.mana = int(round(character.max_mana * (20/100)))
-
-                if character.mana > character.max_mana:
-                    character.mana += int(round(character.max_mana * (5/100)))
+                character.mana += int(round(character.max_mana * (5/100)))
 
                 character.save_to_db()
 
@@ -99,8 +151,8 @@ async def auto_heal():
 
                 character.hp += int(round(character.max_hp * (5/100)))
 
-                if character.hp > character.max_hp:
-                    character.hp = character.max_hp
+            if character.hp > character.max_hp:
+                character.hp = character.max_hp
 
             character.save_to_db()
 
@@ -120,75 +172,67 @@ async def dodo():
 @tasks.loop(seconds=3)
 async def mob_attack():
 
-    areas = []
-    for filename in os.listdir('./database/areas'):
-        if filename.endswith('.yml'):
-            areas.append(filename[:-4])
-
-    for area_id in areas:
-        area = Area(area_id)
+    areas = bot.game.areas.areas
+    
+    for area in areas.values():
 
         if area.type == AreaType.PVE_AREA:
-            for enemy_id in area.battling.keys():
-                enemy_dict = area.battling.get(enemy_id)
+            try:
+                for enemy_id in area.battling.keys():
+                    enemy = area.battling.get(enemy_id)
 
-                enemy = Enemy(**enemy_dict)
+                    battling_dict = enemy.battling
 
-                battling_dict = enemy.battling
+                    l = list(battling_dict.values())
 
-                l = list(battling_dict.values())
+                    l.sort(reverse=True)
 
-                l.sort(reverse=True)
+                    if len(list(battling_dict.keys())) <= 0:
+                        enemy.hp = 0
 
-                if len(list(battling_dict.keys())) <= 0:
-                    enemy.hp = 0
+                        area.battling.pop(enemy_id, None)
 
-                    area.rehydrate()
+                        area.entitys[enemy_id] = enemy
 
-                    area.save_enemy(enemy, enemy_id)
+                        area.save_to_db()
 
-                    area.save_to_db()
+                        continue
 
-                    continue
+                    key = list(filter(lambda x: battling_dict[x] == l[0], battling_dict))[0]
 
-                key = list(filter(lambda x: battling_dict[x] == l[0], battling_dict))[0]
+                    character = bot.game.characters.get(key)
 
-                character = load_character(key)
+                    damage, killed, _ = enemy.fight(character)
 
-                damage, killed, _ = enemy.fight(character)
-
-                character.save_to_db()
-
-                embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
-                embed.set_thumbnail(url=f"{enemy.skin}")
-                embed.add_field(name=f"Historique", value=f"{enemy.name} a fait {damage} dégâts à {character.name}", inline=False)
-                embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
+                    embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
+                    embed.set_thumbnail(url=f"{enemy.skin}")
+                    embed.add_field(name=f"Historique", value=f"{enemy.name} a fait {damage} dégâts à {character.name}", inline=False)
+                    embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
 {mana_bar(character)}""", inline=False)
-                embed.add_field(name=f"{enemy.name}", value=f"{endurance_bar(enemy)}", inline=True)
+                    embed.add_field(name=f"{enemy.name}", value=f"{endurance_bar(enemy)}", inline=True)
 
-                guild = bot.get_guild(enemy.battle_message[2])
+                    guild = bot.get_guild(enemy.battle_message[2])
 
-                channel = guild.get_channel(enemy.battle_message[1])
+                    channel = guild.get_channel(enemy.battle_message[1])
 
-                message = await channel.fetch_message(enemy.battle_message[0])
+                    message = await channel.fetch_message(enemy.battle_message[0])
 
-                if killed:
-                    enemy.battling.pop(key, None)
+                    if killed:
+                        enemy.battling.pop(key, None)
 
-                    area.rehydrate()
+                        area.save_to_db()
 
-                    area.save_enemy(enemy, enemy_id)
+                        character.die()
 
-                    area.save_to_db()
+                        embed.add_field(name=f"Perdu !", value=f"{enemy.name} a tué {character.name}", inline=False)
 
-                    character.die()
+                        await message.edit(embed=embed, view=None)
+                    else:
 
-                    embed.add_field(name=f"Perdu !", value=f"{enemy.name} a tué {character.name}", inline=False)
+                        await message.edit(embed=embed)
 
-                    await message.edit(embed=embed, view=None)
-                else:
-                    await message.edit(embed=embed)
-
+            except RuntimeError:
+                continue
 
 @bot.event
 async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
@@ -241,11 +285,15 @@ async def create(ctx, character_name=None):
     else:
         await ctx.respond("Vous avez déjà créé votre personnage.")
 
+@bot.slash_command(name="pt")
+async def pt(ctx):
+    character = bot.game.characters.getCharacter(ctx.author.id)
+    character.hp = character.hp/2
 
 @bot.slash_command(name="status", help="Get information about your character.")
 async def status(ctx):
 
-    character = load_character(ctx.author.id)
+    character = bot.game.characters.getCharacter(ctx.author.id)
 
     embed = status_embed(ctx, character)
 
@@ -283,8 +331,8 @@ async def status(ctx):
 class FightView(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
     @discord.ui.button(label="Attack!", style=discord.ButtonStyle.red, emoji="🗡️") # Create a button with the label "😎 Click me!" with color Blurple
     async def attack_callback(self, button, interaction):
-        character = load_character(interaction.user.id)
-        area = Area(character.area_id)
+        character = bot.game.characters.get(interaction.user.id)
+        area = bot.game.areas.get(character.area_id)
 
         if interaction.channel.id != area.channel_id:
             return
@@ -297,21 +345,24 @@ class FightView(discord.ui.View): # Create a class called MyView that subclasses
 
         # Simulate battle
         enemy_id = character.battling
-        area.rehydrate()
-        enemy_dict = area.battling.get(enemy_id)
-        enemy = Enemy(**enemy_dict)
+        enemy = area.battling.get(enemy_id)
 
         damage, killed, _ = character.fight(enemy=enemy)
 
+        print(area.battling.get(enemy_id).hp)
+
         embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
         embed.set_thumbnail(url=f"{enemy.skin}")
+        embed.add_field(name=f"Historique", value=f"{character.name} a fait {damage} dégâts à {enemy.name}", inline=False)
+
         embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
 {mana_bar(character)}""", inline=False)
-        
+
         if killed:
             t = "<:emptybarleft:1068151816946204742><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarright:1068151820922388510>"
             embed.add_field(name=f"{enemy.name}", value=f"{t}", inline=True)
             xp, gold, ready_to_level_up = character.defeat(enemy)
+            enemy.battling = {}
             embed.add_field(name=f"{character.name} gagne !", value=f"Et gagne {gold} gold, {xp} XP !", inline=False)
         else:
             embed.add_field(name=f"{enemy.name} life", value=f"{endurance_bar(enemy)}", inline=True)
@@ -321,7 +372,7 @@ class FightView(discord.ui.View): # Create a class called MyView that subclasses
         if killed:
             await message.edit_message(embed=embed, view=None)
         else:
-            
+
             spells = character.spells
 
             options = []
@@ -408,7 +459,7 @@ async def spell_callback(interaction):
 
     embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
     embed.set_thumbnail(url=f"{enemy.skin}")
-    
+
 
     damage, killed = 0, False
     if character.mana >= spell.mana_cost:
@@ -417,7 +468,7 @@ async def spell_callback(interaction):
         embed.add_field(name=f"Historique", value=f"{character.name} a fait {damage} dégâts à {enemy.name} avec {spell.name}", inline=False)
     else:
         embed.add_field(name=f"Historique", value=f"{character.name} tente de lancer {spell.name} mais n'y arrive pas !", inline=False)
-    
+
     character.save_to_db()
     embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
 {mana_bar(character)}""", inline=False)
@@ -457,9 +508,10 @@ async def spell_callback(interaction):
 @bot.slash_command(name="hunt", help="Look for an enemy to fight.")
 @commands.cooldown(1,1)
 async def hunt(ctx):
-    character = load_character(ctx.author.id)
-    area = Area(character.area_id)
+    character = bot.game.characters.get(ctx.author.id)
+    area = bot.game.areas.get(character.area_id)
 
+    print(character.mode)
     if ctx.channel.id != area.channel_id:
         await ctx.respond("Vous ne pouvez utiliser cette commande que quand des channels de jeu.")
         return
@@ -475,20 +527,48 @@ async def hunt(ctx):
         await ctx.respond("Vous ne pouvez pas appeler cette commande en combat!")
         return
 
-    enemy_id = character.hunt()
+    enemys = []
 
-    area.rehydrate()
+    if area.type == AreaType.PVE_AREA:
+        for entity in area.entitys.keys():
 
+            enemy = area.entitys.get(entity)
+
+            print(time.time() - enemy.last_death)
+            print(enemy.respawn)
+
+            if time.time() - enemy.last_death >= enemy.respawn:
+
+                enemys.append(entity)
+
+    enemy_id = None
+    enemy = None
+
+    if len(enemys) <= 0:
+        enemy_id = None
+        
+    else:
+        enemy_id = random.choice(enemys)
+        enemy = area.entitys.get(enemy_id)
+
+    
     if enemy_id == None:
         await ctx.respond("Aucun ennemi trouvé dans la zone.")
         return
 
-    if not enemy_id in area.battling.keys():
-        await ctx.respond(f"{enemy_id} n'est pas dans la zone !")
+    if not enemy_id in area.entitys.keys():
+        await ctx.respond(f"{enemy.name} n'est pas dans la zone !")
         return
+    
+    character.mode = GameMode.BATTLE
+    character.battling = enemy_id
+    
+    area.entitys.pop(enemy_id, None)
 
-    enemy = Enemy(**(area.battling.get(enemy_id)))
+    area.battling[enemy_id] = enemy
 
+
+    enemy.battling = {}
     enemy.battling[ctx.author.id] = 0
 
     embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
@@ -505,13 +585,13 @@ async def hunt(ctx):
         spell = Spell(spell_id)
 
         options.append(discord.SelectOption(label=spell.name, value=spell_id))
-    
+
     select = discord.ui.Select(options = options, min_values=1, max_values=1)
 
     select.callback = spell_callback
 
     view = FightView()
-    
+
     view.add_item(item=select)
 
     # Send reply
@@ -520,8 +600,6 @@ async def hunt(ctx):
     await ctx.respond("You enter in fight !")
 
     enemy.battle_message = [message.id, message.channel.id, message.guild.id]
-
-    area.save_enemy(enemy, enemy_id)
 
     area.save_to_db()
 
@@ -752,9 +830,13 @@ async def statistics(ctx):
 
     for enemy_type in character.defeated:
         t += f"\n{enemy_type} : {character.defeated[enemy_type]}"
-    
+
     embed=discord.Embed(title="Stats", description="Nombre de monstres que vous avez tué :", color=0xff0000)
     embed.add_field(name="", value=t, inline=False)
     await ctx.respond(embed=embed)
+
+@bot.slash_command(name="test")
+async def test(ctx):
+    await ctx.send("test")
 
 bot.run(DISCORD_TOKEN)

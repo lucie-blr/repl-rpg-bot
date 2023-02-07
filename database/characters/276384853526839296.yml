@@ -5,9 +5,10 @@ attack:
 - 90
 battling: null
 defeated:
-  lone_wolf: 2
+  boss_lone_wolf: 3
+  lone_wolf: 24
 defense: 1
-gold: 3296
+gold: 3392
 hp: 9624
 inventory: []
 level: 99
@@ -20,5 +21,6 @@ name: Void
 skin: https://media.discordapp.net/attachments/919160541291888703/1065271808460329001/Illustration11_1.png
 spells:
 - firebolt
+- prout
 user_id: 276384853526839296
 xp: 100
