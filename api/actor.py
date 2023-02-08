@@ -25,6 +25,6 @@ class Actor:
             return (damage, other.hp <= 0, None) #(damage, fatal)
         else:
             effects = attack.effects
-            damage = effects.get("instant_damage")
+            damage = round((self.adb + self.adb * (effects.get("modif_damage")/100)) * (round(attack_rdm / 10) / 10))
             other.hp -= damage
             return (damage, other.hp <= 0, attack)

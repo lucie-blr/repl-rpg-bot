@@ -6,9 +6,9 @@ attack:
 battling: null
 defeated:
   boss_lone_wolf: 15
-  lone_wolf: 192
+  lone_wolf: 194
 defense: 1
-gold: 1317
+gold: 1323
 hp: 69
 inventory: []
 level: 8
@@ -20,6 +20,6 @@ mode:
 name: Aiden
 skin: https://media.discordapp.net/attachments/619262155685888000/1066784698250055780/Illustration79_2.png
 spells:
-- firebolt
+- charge
 user_id: 365714383793422338
-xp: 88
+xp: 94

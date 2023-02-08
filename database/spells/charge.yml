@@ -1,0 +1,8 @@
+id: charge
+name: Charge
+mana_cost: 0
+effects:
+  modif_damage: 0
+skin: null
+emoji: 🗡️
+cooldown: 5

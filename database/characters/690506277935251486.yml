@@ -6,9 +6,9 @@ attack:
 battling: null
 defeated:
   boss_lone_wolf: 8
-  lone_wolf: 72
+  lone_wolf: 75
 defense: 1
-gold: 983
+gold: 992
 hp: 56
 inventory: []
 level: 7
@@ -20,6 +20,6 @@ mode:
 name: Vehme
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 spells:
-- firebolt
+- charge
 user_id: 690506277935251486
-xp: 318
+xp: 327

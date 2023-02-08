@@ -31,8 +31,9 @@ class Character(Actor):
 
         self.skin = skin
         
-        self.spells = spells
-        
+        self.spells = {}
+        for spell in spells:
+            self.spells[spell] = Spell(spell)
         self.defeated = defeated
 
     def save_to_db(self):
@@ -41,6 +42,12 @@ class Character(Actor):
         if self.battling != None:
             character_dict["battling"] = self.battling
         character_dict['mode'] = [self.mode.name]
+        
+        l = []
+        for spell in self.spells.keys():
+            l.append(spell)
+        
+        character_dict['spells'] = l
 
         db = character_dict
         try:
@@ -52,46 +59,9 @@ class Character(Actor):
             with open(f'./database/characters/{self.user_id}.yml', "w") as f:
                 yaml.dump(db, f)
 
-    def hunt(self):
-        # Generate random enemy to fight
-        enemys = []
-
-        area = Area(self.area_id)
-
-        entitys = area.entitys
-
-        
-        # Enter battle mode
-        self.mode = GameMode.BATTLE
-        self.battling = enemy
-
-        enemy_dict = area.entitys.get(enemy)
-
-        player = enemy_dict.get("battling")
-
-        player = {}
-
-        player[self.user_id] = 0
-
-        print(player)
-        print(enemy_dict)
-
-        enemy_dict["battling"] = player
-
-        area.entitys.pop(enemy, None)
-        area.battling[enemy] = enemy_dict
-
-        # Save changes to DB after state change
-        self.save_to_db()
-        area.save_to_db()
-
-        return enemy
-
     def fight(self, enemy, attack = None):
         area = Area(self.area_id)
 
-        print(attack)
-        print(enemy)
         outcome, killed, attack = super().fight(enemy, attack)
 
         enemy.battling[self.user_id] += outcome
@@ -110,21 +80,10 @@ class Character(Actor):
         area = Area(self.area_id)
 
         enemy.battling.pop(self.user_id, None)
-        print(enemy.battling)
-                    
-        area.rehydrate()
-
-        area.save_enemy(enemy, self.battling)
         
         # Exit battle mode
         self.battling = None
         self.mode = GameMode.ADVENTURE
-
-        area.save_to_db()
-
-        # Save to DB after state change
-        self.save_to_db()
-
         return (damage, self.hp <= 0, None) #(damage, killed)
 
     def defeat(self, enemy):
@@ -144,9 +103,6 @@ class Character(Actor):
 
         # Check if ready to level up after earning XP
         ready, _ = self.ready_to_level_up()
-
-        # Save to DB after state change
-        self.save_to_db()
         
         return (enemy.xp, enemy.gold, ready)
 
@@ -169,16 +125,12 @@ class Character(Actor):
         setattr(self, increase, getattr(self, increase)+1) # increase chosen stat
 
         self.hp = self.max_hp #refill HP
-        
-        # Save to DB after state change
-        self.save_to_db()
 
         return (True, self.level) # (leveled up, new level)
 
     def die(self):
         self.hp = 0
         self.mode = GameMode.DEAD
-        self.save_to_db()
 
     def get_spells(self):
         dic = {}

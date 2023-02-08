@@ -9,5 +9,8 @@ class Spell:
         self.id = db.get("id")
         self.effects = db.get("effects")
         self.mana_cost = db.get("mana_cost")
+        self.emoji = db.get("emoji")
+        self.last_use = 0
+        self.cooldown = db.get("cooldown")
 
  
