@@ -40,7 +40,9 @@ class Character(Actor):
 
         character_dict = deepcopy(vars(self))
         if self.battling != None:
-            character_dict["battling"] = self.battling
+            self.battling = None
+            self.mode = GameMode.ADVENTURE
+        character_dict["battling"] = self.battling
         character_dict['mode'] = [self.mode.name]
         
         l = []

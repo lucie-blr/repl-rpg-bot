@@ -47,15 +47,15 @@ class Area:
         for entity in self.entitys.keys():
             e = self.entitys.get(entity)
             d[entity] = deepcopy(vars(e))
-        area_dict['entitys'] = d
 
-        d = {}
         for enemy in self.battling.keys():
             print(self.battling.get(enemy).battling)
             e = self.battling.get(enemy)
             d[enemy] = deepcopy(vars(e))
             print(d)
-        area_dict['battling'] = d
+
+        area_dict['battling'] = {}
+        area_dict['entitys'] = d
 
         db = area_dict
 

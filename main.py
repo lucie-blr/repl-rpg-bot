@@ -53,7 +53,6 @@ async def on_ready():
     bot.game.loadDb()
     
     mob_attack.start()
-    dodo.start()
     auto_heal.start()
     classement.start()
 
@@ -157,18 +156,6 @@ async def auto_heal():
                 character.hp = character.max_hp
 
             character.save_to_db()
-
-@tasks.loop(seconds=1200)
-async def dodo():
-
-    date = datetime.datetime.today()
-
-    if date.hour == (22):
-       guild = bot.get_guild(887675595419451396)
-
-       channel = guild.get_channel(1012501861036740669)
-
-       await channel.send("<@365714383793422338> Va dormir espèce de fils de flûte (mais ça compte pas pour Clément).")
 
 @tasks.loop(seconds=3)
 async def mob_attack():
@@ -327,7 +314,9 @@ async def status(ctx):
 
 class FightView(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
     #@discord.ui.button(label="Attack!", style=discord.ButtonStyle.red, emoji="🗡️") # Create a button with the label "😎 Click me!" with color Blurple
-    #async def attack_callback(self, button, interaction):
+    #a
+    # 
+    # sync def attack_callback(self, button, interaction):
     #    character = bot.game.characters.get(interaction.user.id)
     #    area = bot.game.areas.get(character.area_id)
 #
@@ -637,7 +626,7 @@ async def die(ctx):
 
     character.die()
 
-    await ctx.respond(f"Le personnage {character.name} n'est plus. Créez-en un nouveau avec `/create`.")
+    await ctx.respond(f"Le personnage {character.name} n'est plus. soignez vous avec `/heal`.")
 
 @bot.slash_command(name="reset", help="[DEV] Destroy and recreate current character.")
 async def reset(ctx):
@@ -754,5 +743,13 @@ async def save(ctx):
     await bot.change_presence(activity=None)
 
     os.system('pm2 restart 2')
+
+@bot.slash_command(name="stop")
+async def stop(ctx):
+    bot.game.save_to_db()
+
+    await ctx.respond('Game saved')
+
+    os.system('pm2 stop 2')
 
 bot.run(DISCORD_TOKEN)

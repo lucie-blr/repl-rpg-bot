@@ -5,10 +5,10 @@ attack:
 - 90
 battling: null
 defeated:
-  boss_lone_wolf: 8
-  lone_wolf: 75
+  boss_lone_wolf: 10
+  lone_wolf: 78
 defense: 1
-gold: 992
+gold: 1021
 hp: 56
 inventory: []
 level: 7
@@ -22,4 +22,4 @@ skin: https://media.discordapp.net/attachments/619262155685888000/10646182591581
 spells:
 - charge
 user_id: 690506277935251486
-xp: 327
+xp: 366

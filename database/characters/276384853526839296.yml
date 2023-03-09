@@ -5,11 +5,11 @@ attack:
 - 90
 battling: null
 defeated:
-  boss_lone_wolf: 7
-  lone_wolf: 42
+  boss_lone_wolf: 10
+  lone_wolf: 45
 defense: 1
-gold: 3486
-hp: 9624
+gold: 3525
+hp: 8637
 inventory: []
 level: 99
 mana: 10
