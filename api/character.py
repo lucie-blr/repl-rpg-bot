@@ -7,13 +7,14 @@ from api.actor import Actor
 from api.helper_function import *
 from api.area import *
 from api.spell import *
+from api.item import *
 
 class Character(Actor):
 
-    level_cap = 10
+    level_cap = 99
 
     def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, 
-    gold, inventory, mode, battling, user_id, area_id,skin, adb, spells, max_mana, defeated):
+    gold, inventory, mode, battling, user_id, area_id,skin, adb, spells, max_mana, defeated, bonus, stuff):
         super().__init__(name, hp, max_hp, attack, defense, xp, gold, adb)
         self.mana = mana
         self.max_mana = max_mana
@@ -36,6 +37,33 @@ class Character(Actor):
             self.spells[spell] = Spell(spell)
         self.defeated = defeated
 
+        self.bonus = bonus  
+
+        self.stuff = {}
+        for item in stuff.keys():
+            if stuff.get(item) is not None:
+                self.stuff[item] = Item(stuff.get(item))
+            else:
+                self.stuff[item] = None
+
+        self.calculateBonus()
+
+    def calculateBonus(self):
+
+        for key in self.bonus.keys():
+            self.bonus[key] = 0
+
+        for item in self.stuff.values():
+            if item is None:
+                continue
+            for stat in item.bonus.keys():
+                self.bonus[stat] += item.bonus.get(stat)
+
+        return
+
+    def getBonus(self, bonus):
+        return self.bonus[bonus]
+
     def save_to_db(self):
 
         character_dict = deepcopy(vars(self))
@@ -51,6 +79,15 @@ class Character(Actor):
         
         character_dict['spells'] = l
 
+        l = {}
+        for key in self.stuff.keys():
+            if self.stuff.get(key) is not None:
+                item = self.stuff.get(key)
+                l[key] = item.id
+            else:
+                l[key] = None
+        character_dict['stuff'] = l
+
         db = character_dict
         try:
             with open(f'./database/characters/{self.user_id}.yml', "w") as f:
@@ -64,7 +101,7 @@ class Character(Actor):
     def fight(self, enemy, attack = None):
         area = Area(self.area_id)
 
-        outcome, killed, attack = super().fight(enemy, attack)
+        outcome, killed, attack = super().fight(enemy, attack, self.getBonus("adb"))
 
         enemy.battling[self.user_id] += outcome
         
@@ -140,3 +177,17 @@ class Character(Actor):
             dic[spell] = Spell(spell)
         
         return dic
+
+    def equip(self, item):
+    
+        actual = self.stuff.get(item.type)
+
+        self.inventory[self.stuff.get(item.type)] = 1
+        
+        if item != None:
+            self.stuff[item.type] = item
+        else:
+            self.stuff[actual.type] = None
+
+        print(self.stuff)
+        

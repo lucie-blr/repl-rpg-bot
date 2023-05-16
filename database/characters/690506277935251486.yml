@@ -4,6 +4,10 @@ attack:
 - 30
 - 90
 battling: null
+bonus:
+  adb: 0
+  defense: 0
+  hp: 0
 defeated:
   boss_lone_wolf: 10
   lone_wolf: 78
@@ -21,5 +25,11 @@ name: Vehme
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 spells:
 - charge
+stuff:
+  boots: null
+  chestplate: null
+  helmet: null
+  leggings: null
+  weapon: null
 user_id: 690506277935251486
 xp: 366

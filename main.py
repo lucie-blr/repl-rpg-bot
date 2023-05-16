@@ -51,7 +51,7 @@ async def on_ready():
     print(f"{bot.user} has connected to Discord!")
 
     bot.game.loadDb()
-    
+
     mob_attack.start()
     auto_heal.start()
     classement.start()
@@ -70,8 +70,6 @@ async def classement():
         message = classement.get(message)
         guild = bot.get_guild(887675595419451396)
 
-        characters = os.listdir('./database/characters')
-
         channel = guild.get_channel(message[0])
 
         message = await channel.fetch_message(message[1])
@@ -85,7 +83,7 @@ async def classement():
             defeated = character.defeated
 
             v = 0
-            
+
             try:
                 v += defeated.get("lone_wolf")
             except:
@@ -95,20 +93,26 @@ async def classement():
             except:
                 v = v
 
-            d[character.name] = v
+            d[character.user_id] = v
 
 
         l = list(d.values())
 
         l.sort(reverse=True)
 
+        ch = bot.game.characters.get(list(filter(lambda x: d[x] == l[0], d))[0])    
+
+        embed.set_thumbnail(url=(ch.skin))
+
         for i in range(len(l)):
-            key = list(filter(lambda x: d[x] == l[i], d))[0]    
-                
-            embed.add_field(name=f"{key}", value=f"{(d[key])}")
+            key = list(filter(lambda x: d[x] == l[i], d))[0]
+
+            ch = bot.game.characters.get(key)
+
+            embed.add_field(name=f"{ch.name}", value=f"{(d[key])}")
 
             d.pop(key, None)
-        
+
         await message.edit("", embed=embed)
 
 @tasks.loop(seconds=10)
@@ -161,7 +165,7 @@ async def auto_heal():
 async def mob_attack():
 
     areas = bot.game.areas.areas
-    
+
     for area in areas.values():
 
         if area.type == AreaType.PVE_AREA:
@@ -303,7 +307,10 @@ async def status(ctx):
     # Inventory field
     inventory_text = f"Gold: {character.gold}\n"
     if character.inventory:
-        inventory_text += "\n".join(character.inventory)
+        for item_id in character.inventory.keys():
+            item = Item(item_id)
+
+            inventory_text += f"\n**{item.name}**\n{item.description}\n{character.inventory.get(item_id)}\n"
 
     embed.add_field(name="Inventory", value=inventory_text, inline=True)
 
@@ -312,75 +319,13 @@ async def status(ctx):
 
     await ctx.respond(embed=embed)
 
-class FightView(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
-    #@discord.ui.button(label="Attack!", style=discord.ButtonStyle.red, emoji="🗡️") # Create a button with the label "😎 Click me!" with color Blurple
-    #a
-    # 
-    # sync def attack_callback(self, button, interaction):
-    #    character = bot.game.characters.get(interaction.user.id)
-    #    area = bot.game.areas.get(character.area_id)
-#
-    #    if interaction.channel.id != area.channel_id:
-    #        return
-#
-    #    if character.mode == GameMode.DEAD:
-    #        return
-#
-    #    if character.mode != GameMode.BATTLE:
-    #        return
-#
-    #    # Simulate battle
-    #    enemy_id = character.battling
-    #    enemy = area.battling.get(enemy_id)
-#
-    #    damage, killed, _ = character.fight(enemy=enemy)
-#
-    #    embed=discord.Embed(title="Fight", description=f"{character.name} vs {enemy.name}", color=0xff0000)
-    #    embed.set_thumbnail(url=f"{enemy.skin}")
-    #    embed.add_field(name=f"Historique", value=f"{character.name} a fait {damage} dégâts à {enemy.name}", inline=False)
-#
-    #    embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
-#""", inline=False)
-#
-#        if killed:
-#            t = "<:emptybarleft:1068151816946204742><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarmiddle:1068151825418702878><:emptybarright:1068151820922388510>"
-#            embed.add_field(name=f"{enemy.name}", value=f"{t}", inline=True)
-#            xp, gold, ready_to_level_up = character.defeat(enemy)
-#            enemy.battling = {}
-#            embed.add_field(name=f"{character.name} gagne !", value=f"Et gagne {gold} gold, {xp} XP !", inline=False)
-#        else:
-#            embed.add_field(name=f"{enemy.name} life", value=f"{endurance_bar(enemy)}", inline=True)
-#
-#        message = interaction.response
-#
-#        if killed:
-#            await message.edit_message(embed=embed, view=None)
-#        else:
-#
-#            spells = character.spells
-#
-#            options = []
-#
-#            for spell_id in spells:
-#                spell = Spell(spell_id)
-#
-#                options.append(discord.SelectOption(label=spell.name, value=spell_id, emoji=spell.emoji))
-#
-#            select = discord.ui.Select(options = options, min_values=1, max_values=1)
-#
-#            select.callback = spell_callback
-#
-#            view = FightView()
-#
-#            view.add_item(item=select)
-#
-#            await message.edit_message(embed=embed, view=view)
-
+class FightView(discord.ui.View):
 
     @discord.ui.button(label="Flee!", style=discord.ButtonStyle.grey, emoji="🏃") # Create a button with the label "😎 Click me!" with color Blurple
     async def flee_callback(self, button, interaction):
 
         character = bot.game.characters.get(interaction.user.id)
+
         area = bot.game.areas.get(character.area_id)
 
         if interaction.channel.id != area.channel_id:
@@ -450,7 +395,6 @@ async def spell_callback(interaction):
     else:
         embed.add_field(name=f"Historique", value=f"{character.name} tente de lancer {spell.name} mais n'y arrive pas !", inline=False)
 
-    character.save_to_db()
     embed.add_field(name=f"{character.name}", value=f"""{endurance_bar(character)}
 """, inline=False)
     if killed:
@@ -523,12 +467,12 @@ async def hunt(ctx):
 
     if len(enemys) <= 0:
         enemy_id = None
-        
+
     else:
         enemy_id = random.choice(enemys)
         enemy = area.entitys.get(enemy_id)
 
-    
+
     if enemy_id == None:
         await ctx.respond("Aucun ennemi trouvé dans la zone.")
         return
@@ -536,10 +480,10 @@ async def hunt(ctx):
     if not enemy_id in area.entitys.keys():
         await ctx.respond(f"{enemy.name} n'est pas dans la zone !")
         return
-    
+
     character.mode = GameMode.BATTLE
     character.battling = enemy_id
-    
+
     area.entitys.pop(enemy_id, None)
 
     area.battling[enemy_id] = enemy
@@ -742,7 +686,7 @@ async def save(ctx):
 
     await bot.change_presence(activity=None)
 
-    os.system('pm2 restart 2')
+    os.system('pm2 restart PeripleRpg')
 
 @bot.slash_command(name="stop")
 async def stop(ctx):
@@ -750,6 +694,94 @@ async def stop(ctx):
 
     await ctx.respond('Game saved')
 
-    os.system('pm2 stop 2')
+    os.system('pm2 stop PeripleRpg')
+
+async def equip_callback_one(interaction):
+    character = bot.game.characters.get(interaction.user.id)
+
+    message = interaction.response
+
+    item_type = interaction.data
+
+    options = []
+
+    for item_id in character.inventory.keys():
+        item = Item(item_id)
+
+        options.append(discord.SelectOption(label="Aucun item", value="none"))
+
+        if item.type == item_type:
+
+            options.append(discord.SelectOption(label=item.name, value=item_id))
+
+    select = discord.ui.Select(options = options, min_values=1, max_values=1)
+
+    select.callback = equip_callback_two
+
+    view = discord.ui.View()
+
+    view.add_item(item=select)
+
+    embed=discord.Embed(title="Stuff", description="With witch item ?", color=0xff0000)
+
+    await message.edit_message(embed=embed, view = view)
+        
+async def equip_callback_two(interaction):
+
+    if interaction.data != "none":
+
+        character = bot.game.characters.get(interaction.user.id)
+
+        message = interaction.message 
+
+        character.inventory[interaction.data] = character.inventory.get(interaction.data) - 1
+
+        if character.inventory[interaction.data] <= 0:
+            character.inventory.pop(interaction.value, False)
+        
+        character.equip(Item(interaction.data))
+
+        embed=discord.Embed(title="Stuff", description=f"You equiped {(Item(interaction.data)).name} ", color=0xff0000)
+
+    else:
+        character.equip(None)
+
+        embed=discord.Embed(title="Stuff", description=f"You unequiped your item.", color=0xff0000)
+
+    
+    message.edit_message(embed=embed, view = None)
+
+
+@bot.slash_command(name="equip", help="Equip an item in inventory slot")
+async def equip(ctx):
+    character = bot.game.characters.get(ctx.author.id)
+
+    if character.mode == GameMode.DEAD:
+        await ctx.respond("Vous ne pouvez rien faire tant que vous êtes morts.")
+        return
+
+    if character.mode != GameMode.ADVENTURE:
+        await ctx.respond("Vous ne pouvez pas appeler cette commande en combat.")
+        return
+
+    item_types = character.stuff.keys()
+
+    options = []
+
+    for item_type in item_types:
+
+        options.append(discord.SelectOption(label=item_type, value=item_type))
+
+    select = discord.ui.Select(options = options, min_values=1, max_values=1)
+
+    select.callback = equip_callback_one
+
+    view = discord.ui.View()
+
+    view.add_item(item=select)
+
+    embed=discord.Embed(title="Stuff", description="What piece do you wanna change ?", color=0xff0000)
+
+    await ctx.respond(embed=embed, view = view, ephemeral=True)
 
 bot.run(DISCORD_TOKEN)

@@ -1,0 +1,8 @@
+id: test
+name: test
+description: a test item
+bonus:
+  adb: 1
+  defense: 0
+  hp: 0
+type: helmet

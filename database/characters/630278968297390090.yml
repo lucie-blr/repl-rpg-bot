@@ -4,11 +4,15 @@ attack:
 - 30
 - 90
 battling: null
+bonus:
+  adb: 0
+  defense: 0
+  hp: 0
 defeated:
   boss_lone_wolf: 17
-  lone_wolf: 207
+  lone_wolf: 208
 defense: 2
-gold: 1292
+gold: 1295
 hp: 69
 inventory: []
 level: 8
@@ -21,5 +25,11 @@ name: "Om\xE9a-Zesta"
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 spells:
 - charge
+stuff:
+  boots: null
+  chestplate: null
+  helmet: null
+  leggings: null
+  weapon: null
 user_id: 630278968297390090
-xp: 43
+xp: 46

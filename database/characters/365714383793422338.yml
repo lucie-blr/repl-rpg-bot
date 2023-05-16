@@ -4,11 +4,15 @@ attack:
 - 30
 - 90
 battling: null
+bonus:
+  adb: 0
+  defense: 0
+  hp: 0
 defeated:
   boss_lone_wolf: 17
-  lone_wolf: 202
+  lone_wolf: 210
 defense: 1
-gold: 1367
+gold: 1391
 hp: 69
 inventory: []
 level: 8
@@ -21,5 +25,11 @@ name: Aiden
 skin: https://media.discordapp.net/attachments/619262155685888000/1066784698250055780/Illustration79_2.png
 spells:
 - charge
+stuff:
+  boots: null
+  chestplate: null
+  helmet: null
+  leggings: null
+  weapon: null
 user_id: 365714383793422338
-xp: 148
+xp: 172

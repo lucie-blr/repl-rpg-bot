@@ -1,16 +1,21 @@
-adb: 109
+adb: 1
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
+bonus:
+  adb: 1
+  defense: 0
+  hp: 0
 defeated:
   boss_lone_wolf: 10
-  lone_wolf: 45
+  lone_wolf: 48
 defense: 1
-gold: 3525
-hp: 8637
-inventory: []
+gold: 3534
+hp: 9624
+inventory:
+  test: 1
 level: 99
 mana: 10
 max_hp: 9624
@@ -22,5 +27,11 @@ skin: https://media.discordapp.net/attachments/919160541291888703/10652718084603
 spells:
 - charge
 - prout
+stuff:
+  boots: null
+  chestplate: null
+  helmet: test
+  leggings: null
+  weapon: null
 user_id: 276384853526839296
 xp: 100

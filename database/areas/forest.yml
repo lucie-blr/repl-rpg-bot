@@ -9,15 +9,14 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1072961026330472600
+    - 1084440133983547442
     - 1064638646004760636
     - 887675595419451396
-    battling:
-      276384853526839296: 0
+    battling: {}
     defense: 1
     enemy: lone_wolf
     gold: 3
-    hp: 10
+    hp: 0
     last_death: 1675758567.8022652
     max_hp: 10
     min_level: 2
@@ -31,14 +30,14 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1079818702268141689
+    - 1092509619252887652
     - 1064638646004760636
     - 887675595419451396
     battling: {}
     defense: 1
     enemy: lone_wolf
     gold: 3
-    hp: -7
+    hp: 0
     last_death: 1675755882.9186137
     max_hp: 10
     min_level: 2
@@ -74,14 +73,14 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1080088704103755827
+    - 1088469443715289149
     - 1064638646004760636
     - 887675595419451396
     battling: {}
     defense: 1
     enemy: lone_wolf
     gold: 3
-    hp: -9
+    hp: 0
     last_death: 1675755872.4389355
     max_hp: 10
     min_level: 2
@@ -95,14 +94,15 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1083407370975195237
+    - 1088451316403154947
     - 1064638646004760636
     - 887675595419451396
-    battling: {}
+    battling:
+      276384853526839296: 0
     defense: 2
     enemy: boss_lone_wolf
     gold: 10
-    hp: 0
+    hp: 20
     last_death: 1675711512.5770626
     max_hp: 20
     min_level: 2
@@ -116,7 +116,7 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1083409558099210350
+    - 1092509592845570088
     - 1064638646004760636
     - 887675595419451396
     battling: {}
@@ -137,14 +137,15 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1079818826402758686
+    - 1088465480320299038
     - 1064638646004760636
     - 887675595419451396
-    battling: {}
+    battling:
+      365714383793422338: 7
     defense: 1
     enemy: lone_wolf
     gold: 3
-    hp: 10
+    hp: 3
     last_death: 1675758605.83433
     max_hp: 10
     min_level: 2
@@ -158,14 +159,14 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1080085704551436349
+    - 1106170733119418379
     - 1064638646004760636
     - 887675595419451396
     battling: {}
     defense: 1
     enemy: lone_wolf
     gold: 3
-    hp: -8
+    hp: 0
     last_death: 1675758620.419742
     max_hp: 10
     min_level: 2
@@ -179,14 +180,14 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1079827051999137942
+    - 1092509557667934209
     - 1064638646004760636
     - 887675595419451396
     battling: {}
     defense: 1
     enemy: lone_wolf
     gold: 3
-    hp: -11
+    hp: 0
     last_death: 1675711524.5430882
     max_hp: 10
     min_level: 2
