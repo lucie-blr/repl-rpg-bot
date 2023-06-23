@@ -9,10 +9,10 @@ bonus:
   defense: 0
   hp: 0
 defeated:
-  boss_lone_wolf: 17
-  lone_wolf: 210
+  boss_lone_wolf: 21
+  lone_wolf: 247
 defense: 1
-gold: 1391
+gold: 1542
 hp: 69
 inventory: []
 level: 8
@@ -32,4 +32,4 @@ stuff:
   leggings: null
   weapon: null
 user_id: 365714383793422338
-xp: 172
+xp: 343

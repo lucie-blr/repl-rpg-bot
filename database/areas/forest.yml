@@ -9,7 +9,7 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1084440133983547442
+    - 1116697674368942190
     - 1064638646004760636
     - 887675595419451396
     battling: {}
@@ -22,7 +22,7 @@ entitys:
     min_level: 2
     name: "\U0001F43A Loup des bois des \xEEles oubli\xE9es"
     respawn: 15
-    skin: https://media.discordapp.net/attachments/619262155685888000/1067886429151178812/Illustration80_1.png?width=630&height=630
+    skin: https://media.discordapp.net/attachments/619262155685888000/1067886429151178812/Illustration80.png?width=630&height=630
     xp: 3
   2:
     adb: 5
@@ -30,7 +30,7 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1092509619252887652
+    - 1114124439068618802
     - 1064638646004760636
     - 887675595419451396
     battling: {}
@@ -51,15 +51,14 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1083409599840915476
+    - 1116704254086881410
     - 1064638646004760636
     - 887675595419451396
-    battling:
-      276384853526839296: 0
+    battling: {}
     defense: 1
     enemy: lone_wolf
     gold: 3
-    hp: 10
+    hp: 0
     last_death: 1675715488.0472913
     max_hp: 10
     min_level: 2
@@ -73,7 +72,7 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1088469443715289149
+    - 1116697369568890960
     - 1064638646004760636
     - 887675595419451396
     battling: {}
@@ -94,15 +93,14 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1088451316403154947
+    - 1114076749597249597
     - 1064638646004760636
     - 887675595419451396
-    battling:
-      276384853526839296: 0
+    battling: {}
     defense: 2
     enemy: boss_lone_wolf
     gold: 10
-    hp: 20
+    hp: 0
     last_death: 1675711512.5770626
     max_hp: 20
     min_level: 2
@@ -116,7 +114,7 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1092509592845570088
+    - 1114077131975184404
     - 1064638646004760636
     - 887675595419451396
     battling: {}
@@ -137,15 +135,14 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1088465480320299038
+    - 1116697504273137735
     - 1064638646004760636
     - 887675595419451396
-    battling:
-      365714383793422338: 7
+    battling: {}
     defense: 1
     enemy: lone_wolf
     gold: 3
-    hp: 3
+    hp: 0
     last_death: 1675758605.83433
     max_hp: 10
     min_level: 2
@@ -159,7 +156,7 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1106170733119418379
+    - 1116704131453833226
     - 1064638646004760636
     - 887675595419451396
     battling: {}
@@ -180,7 +177,7 @@ entitys:
     - 70
     - 100
     battle_message:
-    - 1092509557667934209
+    - 1113800620672045118
     - 1064638646004760636
     - 887675595419451396
     battling: {}

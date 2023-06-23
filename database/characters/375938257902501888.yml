@@ -1,4 +1,4 @@
-adb: 18
+adb: 19
 area_id: forest
 attack:
 - 30
@@ -9,15 +9,15 @@ bonus:
   defense: 0
   hp: 0
 defeated:
-  boss_lone_wolf: 18
-  lone_wolf: 235
+  boss_lone_wolf: 34
+  lone_wolf: 397
 defense: 1
-gold: 2206
-hp: 84
+gold: 2852
+hp: 101
 inventory: []
-level: 9
+level: 10
 mana: 10
-max_hp: 84
+max_hp: 101
 max_mana: 10
 mode:
 - ADVENTURE
@@ -25,6 +25,7 @@ name: Aries
 skin: https://media.discordapp.net/attachments/751906530382839918/1065310142050095165/Sans_titre_134_20230118174200.png
 spells:
 - charge
+- weed
 stuff:
   boots: null
   chestplate: null
@@ -32,4 +33,4 @@ stuff:
   leggings: null
   weapon: null
 user_id: 375938257902501888
-xp: 421
+xp: 135

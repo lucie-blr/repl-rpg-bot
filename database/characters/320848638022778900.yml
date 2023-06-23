@@ -1,4 +1,4 @@
-adb: 16
+adb: 10
 area_id: forest
 attack:
 - 30
@@ -9,19 +9,19 @@ bonus:
   defense: 0
   hp: 0
 defeated:
-  boss_lone_wolf: 31
-  lone_wolf: 319
-defense: 2
-gold: 1768
-hp: 69
+  boss_lone_wolf: 0
+  lone_wolf: 6
+defense: 1
+gold: 18
+hp: 20
 inventory: []
-level: 8
+level: 1
 mana: 10
-max_hp: 69
+max_hp: 20
 max_mana: 10
 mode:
 - ADVENTURE
-name: "Om\xE9a-Zesta"
+name: seiben
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 spells:
 - charge
@@ -31,5 +31,5 @@ stuff:
   helmet: null
   leggings: null
   weapon: null
-user_id: 630278968297390090
-xp: 589
+user_id: 320848638022778900
+xp: 18

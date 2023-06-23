@@ -181,8 +181,6 @@ class Character(Actor):
     def equip(self, item):
     
         actual = self.stuff.get(item.type)
-
-        self.inventory[self.stuff.get(item.type)] = 1
         
         if item != None:
             self.stuff[item.type] = item

@@ -1,4 +1,4 @@
-adb: 1
+adb: 10
 area_id: forest
 attack:
 - 30
@@ -9,16 +9,15 @@ bonus:
   defense: 0
   hp: 0
 defeated:
-  boss_lone_wolf: 10
-  lone_wolf: 48
+  boss_lone_wolf: 0
+  lone_wolf: 2
 defense: 1
-gold: 3534
-hp: 9624
-inventory:
-  test: 1
-level: 99
+gold: 6
+hp: 20
+inventory: {}
+level: 1
 mana: 10
-max_hp: 9624
+max_hp: 20
 max_mana: 10
 mode:
 - ADVENTURE
@@ -26,7 +25,6 @@ name: Void
 skin: https://media.discordapp.net/attachments/919160541291888703/1065271808460329001/Illustration11_1.png
 spells:
 - charge
-- prout
 stuff:
   boots: null
   chestplate: null
@@ -34,4 +32,4 @@ stuff:
   leggings: null
   weapon: null
 user_id: 276384853526839296
-xp: 100
+xp: 6

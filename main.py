@@ -245,10 +245,10 @@ async def create(ctx, character_name=None):
         character_name = ctx.author.name
 
     # create characters dictionary if it does not exist
-    characters = bot.game.characters.characters
-
+    characters = list(bot.game.characters.characters.keys())
+    print(characters)
     # only create a new character if the user does not already have one
-    if user_id not in characters:
+    if str(user_id) not in characters:
         character = Character(**{
             "name": character_name,
             "hp": 20,
@@ -257,7 +257,7 @@ async def create(ctx, character_name=None):
             "defense": 1,
             "mana": 0,
             "max_mana": 10,
-            "spells": ["firebolt"],
+            "spells": ["charge"],
             "level": 1,
             "xp": 0,
             "gold": 0,
@@ -267,18 +267,27 @@ async def create(ctx, character_name=None):
             "user_id": user_id,
             "area_id": "forest",
             "adb": 10,
+            "stuff": {
+                "boots": None,
+                "chestplate": None,
+                "helmet": None,
+                "leggings": None,
+                "weapon": None},
+            "bonus": {
+                "adb": 0,
+                "defense": 0,
+                "hp": 0},
+            "defeated":{
+                "boss_lone_wolf": 0,
+                "lone_wolf": 0},
             "skin": "https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png"
         })
         character.save_to_db()
+        
         character = bot.game.characters.load(user_id)
         await ctx.respond(f"Nouveau personnage niveau 1 créé : {character_name}. Entrez `/status` pour voir vos stats.")
     else:
         await ctx.respond("Vous avez déjà créé votre personnage.")
-
-@bot.slash_command(name="pt")
-async def pt(ctx):
-    character = bot.game.characters.get(ctx.author.id)
-    character.hp = character.hp/2
 
 @bot.slash_command(name="status", help="Get information about your character.")
 async def status(ctx):
@@ -362,7 +371,7 @@ class FightView(discord.ui.View):
 """, inline=False)
             embed.add_field(name= "Fuite", value=f"{character.name} fuit {enemy.name} Avec sa vie intact, mais pas sa dignité. HP: {character.hp}/{character.max_hp}")
 
-        await interaction.response.edit_message(embed=embed) # Send a message when the button is clicked
+        await interaction.response.edit_message(embed=embed, view=None) # Send a message when the button is clicked
 
 
 async def spell_callback(interaction):
@@ -710,9 +719,14 @@ async def equip_callback_one(interaction):
 
         options.append(discord.SelectOption(label="Aucun item", value="none"))
 
-        if item.type == item_type:
+        print(item.type)
+        print(item_type)
+
+        if item.type == item_type.get('values')[0]:
 
             options.append(discord.SelectOption(label=item.name, value=item_id))
+
+    print(options)
 
     select = discord.ui.Select(options = options, min_values=1, max_values=1)
 
@@ -728,22 +742,26 @@ async def equip_callback_one(interaction):
         
 async def equip_callback_two(interaction):
 
-    if interaction.data != "none":
+    item_id = interaction.data.get('values')[0]
+
+    if item_id != "none":
 
         character = bot.game.characters.get(interaction.user.id)
 
-        message = interaction.message 
+        message = interaction.message
 
-        character.inventory[interaction.data] = character.inventory.get(interaction.data) - 1
-
-        if character.inventory[interaction.data] <= 0:
-            character.inventory.pop(interaction.value, False)
+        character.inventory[item_id] = character.inventory.get(item_id) - 1
+        print(character.inventory)
+        if character.inventory[item_id] <= 0:
+            character.inventory.pop(item_id, None)
         
-        character.equip(Item(interaction.data))
-
-        embed=discord.Embed(title="Stuff", description=f"You equiped {(Item(interaction.data)).name} ", color=0xff0000)
+        print(character.inventory)
+        character.equip(Item(item_id))
+        print(character.inventory)
+        embed=discord.Embed(title="Stuff", description=f"You equiped {(Item(item_id)).name} ", color=0xff0000)
 
     else:
+        print(character.inventory)
         character.equip(None)
 
         embed=discord.Embed(title="Stuff", description=f"You unequiped your item.", color=0xff0000)
