@@ -1,4 +1,4 @@
-adb: 14
+adb: 16
 area_id: forest
 attack:
 - 30
@@ -8,18 +8,20 @@ bonus:
   adb: 0
   defense: 0
   hp: 0
-defeated: {}
+defeated:
+  boss_lone_wolf: 10
+  lone_wolf: 78
 defense: 1
-gold: 409
-hp: 36
+gold: 1021
+hp: 56
 inventory: []
-level: 5
+level: 7
 mana: 10
-max_hp: 36
+max_hp: 56
 max_mana: 10
 mode:
 - ADVENTURE
-name: AzuRT
+name: Vehme
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 spells:
 - charge
@@ -29,5 +31,5 @@ stuff:
   helmet: null
   leggings: null
   weapon: null
-user_id: 696712993848819742
-xp: 187
+user_id: 690506277935251486
+xp: 366

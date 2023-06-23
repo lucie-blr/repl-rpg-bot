@@ -4,16 +4,30 @@ attack:
 - 30
 - 90
 battling: null
+bonus:
+  adb: 0
+  defense: 0
+  hp: 0
+defeated: {}
 defense: 1
 gold: 0
 hp: 20
 inventory: []
 level: 1
-mana: 0
+mana: 10
 max_hp: 20
+max_mana: 10
 mode:
 - ADVENTURE
 name: test
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
+spells:
+- charge
+stuff:
+  boots: null
+  chestplate: null
+  helmet: null
+  leggings: null
+  weapon: null
 user_id: 519239090307203082
 xp: 0

@@ -1,0 +1,7 @@
+id: weed
+name: Petit joint
+mana_cost: 0
+effects:
+  modif_damage: 5
+skin: null
+emoji: 

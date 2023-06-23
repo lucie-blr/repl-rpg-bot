@@ -1,4 +1,4 @@
-adb: 14
+adb: 10
 area_id: forest
 attack:
 - 30
@@ -8,18 +8,21 @@ bonus:
   adb: 0
   defense: 0
   hp: 0
-defeated: {}
+defeated:
+  boss_lone_wolf: 0
+  lone_wolf: 6
 defense: 1
-gold: 409
-hp: 36
+gold: 18
+hp: 20
 inventory: []
-level: 5
+level: 1
 mana: 10
-max_hp: 36
+max_hp: 20
 max_mana: 10
 mode:
 - ADVENTURE
-name: AzuRT
+name: "\u263E\U0001D40B\U0001D428\U0001D420\U0001D42B\U0001D422\U0001D425\U0001D41A\
+  \U0001D41F\U0001D425\U0001D422\u2746"
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
 spells:
 - charge
@@ -29,5 +32,5 @@ stuff:
   helmet: null
   leggings: null
   weapon: null
-user_id: 696712993848819742
-xp: 187
+user_id: 725437573308219464
+xp: 18

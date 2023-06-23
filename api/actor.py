@@ -14,15 +14,17 @@ class Actor:
         self.xp = xp
         self.gold = gold
 
-    def fight(self, other):
-        attack = random.randint(self.attack[0], self.attack[1])
-
-        print(attack)
-
-        damage = round(self.adb * (round(attack / 10) / 10))
-
-        print(damage)
+    def fight(self, other, attack = None, bonus = 0):
         
-        other.hp -= damage
+        attack_rdm = random.randint(self.attack[0], self.attack[1])
+        if attack == None:
+            damage = round((self.adb + bonus) * (round(attack_rdm / 10) / 10))
 
-        return (damage, other.hp <= 0) #(damage, fatal)
+            other.hp -= damage
+
+            return (damage, other.hp <= 0, None) #(damage, fatal)
+        else:
+            effects = attack.effects
+            damage = round((self.adb + bonus + (self.adb + bonus) * (effects.get("modif_damage")/100)) * (round(attack_rdm / 10) / 10))
+            other.hp -= damage
+            return (damage, other.hp <= 0, attack)

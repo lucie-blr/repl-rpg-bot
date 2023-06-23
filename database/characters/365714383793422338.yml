@@ -1,19 +1,35 @@
-adb: 14
+adb: 17
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
+bonus:
+  adb: 0
+  defense: 0
+  hp: 0
+defeated:
+  boss_lone_wolf: 21
+  lone_wolf: 247
 defense: 1
-gold: 392
-hp: 592
+gold: 1542
+hp: 69
 inventory: []
-level: 5
-mana: 0
-max_hp: 3600
+level: 8
+mana: 10
+max_hp: 69
+max_mana: 10
 mode:
 - ADVENTURE
 name: Aiden
 skin: https://media.discordapp.net/attachments/619262155685888000/1066784698250055780/Illustration79_2.png
+spells:
+- charge
+stuff:
+  boots: null
+  chestplate: null
+  helmet: null
+  leggings: null
+  weapon: null
 user_id: 365714383793422338
-xp: 145
+xp: 343

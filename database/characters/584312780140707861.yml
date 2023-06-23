@@ -4,16 +4,31 @@ attack:
 - 30
 - 90
 battling: null
+bonus:
+  adb: 0
+  defense: 0
+  hp: 0
+defeated:
+  lone_wolf: 4
 defense: 1
-gold: 24
-hp: 0
+gold: 36
+hp: 21
 inventory: []
 level: 2
-mana: 0
+mana: 10
 max_hp: 21
+max_mana: 10
 mode:
-- DEAD
+- ADVENTURE
 name: Xoni
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
+spells:
+- charge
+stuff:
+  boots: null
+  chestplate: null
+  helmet: null
+  leggings: null
+  weapon: null
 user_id: 584312780140707861
-xp: 4
+xp: 16

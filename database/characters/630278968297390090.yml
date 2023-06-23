@@ -1,19 +1,35 @@
-adb: 13
+adb: 16
 area_id: forest
 attack:
 - 30
 - 90
 battling: null
+bonus:
+  adb: 0
+  defense: 0
+  hp: 0
+defeated:
+  boss_lone_wolf: 31
+  lone_wolf: 319
 defense: 2
-gold: 276
-hp: 36
+gold: 1768
+hp: 69
 inventory: []
-level: 5
-mana: 0
-max_hp: 36
+level: 8
+mana: 10
+max_hp: 69
+max_mana: 10
 mode:
 - ADVENTURE
 name: "Om\xE9a-Zesta"
 skin: https://media.discordapp.net/attachments/619262155685888000/1064618259158147173/Illustration79.png
+spells:
+- charge
+stuff:
+  boots: null
+  chestplate: null
+  helmet: null
+  leggings: null
+  weapon: null
 user_id: 630278968297390090
-xp: 4
+xp: 589

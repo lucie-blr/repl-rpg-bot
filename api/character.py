@@ -6,15 +6,18 @@ from api.enemy import Enemy
 from api.actor import Actor
 from api.helper_function import *
 from api.area import *
+from api.spell import *
+from api.item import *
 
 class Character(Actor):
 
-    level_cap = 10
+    level_cap = 99
 
     def __init__(self, name, hp, max_hp, attack, defense, mana, level, xp, 
-    gold, inventory, mode, battling, user_id, area_id,skin, adb):
+    gold, inventory, mode, battling, user_id, area_id,skin, adb, spells, max_mana, defeated, bonus, stuff):
         super().__init__(name, hp, max_hp, attack, defense, xp, gold, adb)
         self.mana = mana
+        self.max_mana = max_mana
         self.level = level
         
         self.inventory = inventory 
@@ -28,13 +31,62 @@ class Character(Actor):
         self.area_id = area_id
 
         self.skin = skin
+        
+        self.spells = {}
+        for spell in spells:
+            self.spells[spell] = Spell(spell)
+        self.defeated = defeated
+
+        self.bonus = bonus  
+
+        self.stuff = {}
+        for item in stuff.keys():
+            if stuff.get(item) is not None:
+                self.stuff[item] = Item(stuff.get(item))
+            else:
+                self.stuff[item] = None
+
+        self.calculateBonus()
+
+    def calculateBonus(self):
+
+        for key in self.bonus.keys():
+            self.bonus[key] = 0
+
+        for item in self.stuff.values():
+            if item is None:
+                continue
+            for stat in item.bonus.keys():
+                self.bonus[stat] += item.bonus.get(stat)
+
+        return
+
+    def getBonus(self, bonus):
+        return self.bonus[bonus]
 
     def save_to_db(self):
 
         character_dict = deepcopy(vars(self))
         if self.battling != None:
-            character_dict["battling"] = self.battling
+            self.battling = None
+            self.mode = GameMode.ADVENTURE
+        character_dict["battling"] = self.battling
         character_dict['mode'] = [self.mode.name]
+        
+        l = []
+        for spell in self.spells.keys():
+            l.append(spell)
+        
+        character_dict['spells'] = l
+
+        l = {}
+        for key in self.stuff.keys():
+            if self.stuff.get(key) is not None:
+                item = self.stuff.get(key)
+                l[key] = item.id
+            else:
+                l[key] = None
+        character_dict['stuff'] = l
 
         db = character_dict
         try:
@@ -46,76 +98,14 @@ class Character(Actor):
             with open(f'./database/characters/{self.user_id}.yml', "w") as f:
                 yaml.dump(db, f)
 
-    def hunt(self):
-        # Generate random enemy to fight
-        enemys = []
-
+    def fight(self, enemy, attack = None):
         area = Area(self.area_id)
 
-        entitys = area.entitys
-
-        if area.type == AreaType.PVE_AREA:
-            for entity in area.entitys.keys():
-
-                entity_dict = area.entitys.get(entity)
-
-                print(time.time() - entity_dict["last_death"])
-                print(entity_dict["respawn"])
-
-                if time.time() - entity_dict["last_death"] >= entity_dict["respawn"]:
-
-                    enemys.append(entity)
-
-        if len(enemys) <= 0:
-            return None
-
-        enemy = random.choice(enemys)
-
-        # Enter battle mode
-        self.mode = GameMode.BATTLE
-        self.battling = enemy
-
-        enemy_dict = area.entitys.get(enemy)
-
-        player = enemy_dict.get("battling")
-
-        player = {}
-
-        player[self.user_id] = 0
-
-        print(player)
-        print(enemy_dict)
-
-        enemy_dict["battling"] = player
-
-        area.entitys.pop(enemy, None)
-        area.battling[enemy] = enemy_dict
-
-        # Save changes to DB after state change
-        self.save_to_db()
-        area.save_to_db()
-
-        return enemy
-
-    def fight(self, enemy):
-        area = Area(self.area_id)
-
-        enemy_dict = area.battling.get(self.battling)
-
-        enemy = Enemy(**enemy_dict)
-
-        outcome, killed = super().fight(enemy)
+        outcome, killed, attack = super().fight(enemy, attack, self.getBonus("adb"))
 
         enemy.battling[self.user_id] += outcome
         
-        # Save changes to DB after state change
-        self.save_to_db()
-
-        area.save_enemy(enemy, self.battling)
-
-        area.save_to_db()
-        
-        return outcome, killed
+        return outcome, killed, attack
 
     def flee(self, enemy):
         if random.randint(0,1+self.defense): # flee unscathed
@@ -125,24 +115,15 @@ class Character(Actor):
             damage = round(enemy.adb * (round(attack / 10) / 10))
             self.hp -= damage
 
-        # Exit battle mode
-        self.battling = None
-        self.mode = GameMode.ADVENTURE
-
+        
         area = Area(self.area_id)
 
         enemy.battling.pop(self.user_id, None)
-                    
-        area.rehydrate()
-
-        area.save_enemy(enemy, self.enemy_id)
-
-        area.save_to_db()
-
-        # Save to DB after state change
-        self.save_to_db()
-
-        return (damage, self.hp <= 0) #(damage, killed)
+        
+        # Exit battle mode
+        self.battling = None
+        self.mode = GameMode.ADVENTURE
+        return (damage, self.hp <= 0, None) #(damage, killed)
 
     def defeat(self, enemy):
         if self.level < self.level_cap: # no more XP after hitting level cap
@@ -150,20 +131,22 @@ class Character(Actor):
 
         self.gold += enemy.gold # loot enemy
 
+        try:
+            self.defeated[enemy.enemy] += 1
+        except KeyError:
+            self.defeated[enemy.enemy] = 1
+
         # Exit battle mode
         self.battling = None
         self.mode = GameMode.ADVENTURE
 
         # Check if ready to level up after earning XP
         ready, _ = self.ready_to_level_up()
-
-        # Save to DB after state change
-        self.save_to_db()
         
         return (enemy.xp, enemy.gold, ready)
 
     def ready_to_level_up(self):
-        if self.level == 100: # zero values if we've ready the level cap
+        if self.level == 99: # zero values if we've ready the level cap
             return (False, 0)
             
         xp_needed = 12+((self.level)+1)**3
@@ -181,13 +164,28 @@ class Character(Actor):
         setattr(self, increase, getattr(self, increase)+1) # increase chosen stat
 
         self.hp = self.max_hp #refill HP
-        
-        # Save to DB after state change
-        self.save_to_db()
 
         return (True, self.level) # (leveled up, new level)
 
     def die(self):
         self.hp = 0
         self.mode = GameMode.DEAD
-        self.save_to_db()
+
+    def get_spells(self):
+        dic = {}
+        for spell in self.spells:
+            dic[spell] = Spell(spell)
+        
+        return dic
+
+    def equip(self, item):
+    
+        actual = self.stuff.get(item.type)
+        
+        if item != None:
+            self.stuff[item.type] = item
+        else:
+            self.stuff[actual.type] = None
+
+        print(self.stuff)
+        

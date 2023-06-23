@@ -1,0 +1,7 @@
+id: prout
+name: Prout magique
+mana_cost: 10
+effects:
+  instant_damage: 20
+skin: null
+emoji: 💨
